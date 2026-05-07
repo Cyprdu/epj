@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --accent: #7C4DFF;
+            --accent: #7C4DFF; /* Violet spirituel moderne */
             --accent-soft: #EDE7F6;
             --dark: #1A1A2E;
             --light: #FDFDFF;
@@ -82,6 +82,7 @@
             box-shadow: var(--shadow);
             margin-top: 20px;
         }
+
         .hero-box i { color: var(--accent); margin-right: 8px; }
 
         /* --- VIDEO SECTION --- */
@@ -99,6 +100,7 @@
 
         /* --- CONTENT SECTIONS --- */
         section { padding: 100px 5%; max-width: 1300px; margin: 0 auto; }
+        
         .grid-2 { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -117,6 +119,8 @@
         }
 
         h2 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 25px; }
+
+        .about-text { font-size: 1.1rem; color: #555; }
 
         /* --- CARDS --- */
         .cards-container {
@@ -163,37 +167,17 @@
         }
         .btn-main:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(124, 77, 255, 0.4); }
 
-        /* --- REGISTRATION MODAL (L'OPTION B) --- */
-        #venio-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-        }
-        .modal-header {
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            border-bottom: 1px solid #eee;
-        }
-        .modal-body { flex: 1; position: relative; overflow: hidden; }
-        
-        /* Ajustement de l'iframe pour qu'il prenne toute la place */
-        #venio-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
         /* --- FOOTER --- */
         footer {
             background: #f4f4f9;
             padding: 80px 5% 40px;
             margin-top: 50px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
         }
 
         @media (max-width: 768px) {
@@ -201,6 +185,7 @@
             .hero-box { flex-direction: column; gap: 15px; padding: 20px; }
             .hero-content h1 { font-size: 3rem; }
             nav { padding: 15px 20px; }
+            .cta-box { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -208,7 +193,7 @@
 
     <nav>
         <div class="logo">EPJ 2026</div>
-        <button class="btn-main" onclick="openVenio()" style="padding: 10px 25px; font-size: 0.9rem;">S'inscrire</button>
+        <a href="https://ecoledeprierejeunes2026-institutionlamartinebelley.venio.fr/fr" target="_blank" class="btn-main" style="padding: 10px 25px; font-size: 0.9rem;">S'inscrire</a>
     </nav>
 
     <header class="hero">
@@ -236,13 +221,42 @@
             <div data-aos="fade-right">
                 <span class="section-tag">Le Concept</span>
                 <h2>Vivre une semaine à l'école du Seigneur</h2>
-                <p>Les Écoles de Prière Jeunes (EPJ) proposent de venir se mettre à l'écoute de la Parole de Dieu pour grandir dans l'intimité avec Lui, tout en vivant des temps de détente et de fraternité intenses.</p>
+                <p class="about-text">
+                    Les Écoles de Prière Jeunes (EPJ) proposent de venir se mettre à l'écoute de la Parole de Dieu pour grandir dans l'intimité avec Lui, tout en vivant des temps de détente et de fraternité intenses.<br><br>
+                    Nées au Puy-en-Velay en 1983 et regroupées au sein du "CEP", ces écoles rayonnent aujourd'hui partout en France.
+                </p>
             </div>
             <div class="card" style="background: var(--accent); color: white;" data-aos="fade-left">
-                <h3>200,00 €</h3>
-                <p>Tout compris (hébergement, repas, activités)</p>
+                <h3>Infos Pratiques</h3>
                 <br>
-                <button class="btn-main" style="background: white; color: var(--accent);" onclick="openVenio()">S'inscrire</button>
+                <p><i class="fa-solid fa-clock" style="color: white; font-size: 1rem;"></i> <strong>Début :</strong> Dimanche 16 août, 10:30</p>
+                <p><i class="fa-solid fa-flag-checkered" style="color: white; font-size: 1rem;"></i> <strong>Fin :</strong> Samedi 22 août, 16:30</p>
+                <p><i class="fa-solid fa-building-columns" style="color: white; font-size: 1rem;"></i> <strong>Lieu :</strong> Institution Lamartine, Belley</p>
+                <hr style="margin: 20px 0; opacity: 0.3;">
+                <div style="font-size: 2rem; font-weight: 800;">200,00 €</div>
+                <p>Tout compris</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background-color: #fff;">
+        <span class="section-tag" style="text-align: center;">Sécurité & Confiance</span>
+        <h2 style="text-align: center;">Une équipe passionnée</h2>
+        <div class="cards-container">
+            <div class="card" data-aos="fade-up">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Cadre Légal</h3>
+                <p>Camp déclaré au Service départemental à la jeunesse. Encadrement professionnel avec directeurs BAFD et animateurs BAFA.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fa-solid fa-hands-praying"></i>
+                <h3>Accompagnement</h3>
+                <p>Une équipe mixte de bénévoles : prêtres, religieuses, parents, jeunes pros et étudiants au service des enfants.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fa-solid fa-heart"></i>
+                <h3>Projet Éducatif</h3>
+                <p>Le projet répond aux exigences de la charte de l’Association « LE CEP », garantissant bienveillance et pédagogie chrétienne.</p>
             </div>
         </div>
     </section>
@@ -250,53 +264,39 @@
     <section>
         <div class="cta-box" data-aos="zoom-in">
             <h2 style="color: white;">Prêt pour l'aventure ?</h2>
-            <button class="btn-main" onclick="openVenio()">Accéder à l'inscription</button>
+            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9;">Les places sont limitées pour cette 9ème édition à Belley.</p>
+            <a href="https://ecoledeprierejeunes2026-institutionlamartinebelley.venio.fr/fr" target="_blank" class="btn-main">Accéder à l'inscription en ligne</a>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">Paiement sécurisé via Venio</p>
         </div>
     </section>
 
-    <!-- MODAL INTEGRATION VENIO -->
-    <div id="venio-modal">
-        <div class="modal-header">
-            <div style="font-weight: 800; color: var(--accent);">Inscription EPJ 2026</div>
-            <button onclick="closeVenio()" style="border: none; background: #eee; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">× Fermer</button>
-        </div>
-        <div class="modal-body">
-            <!-- Ajout de sandbox pour améliorer la gestion des cookies/sécurité -->
-            <iframe 
-                id="venio-iframe"
-                src="https://ecoledeprierejeunes2026-institutionlamartinebelley.venio.fr/fr" 
-                allow="payment; clipboard-write"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals">
-            </iframe>
-        </div>
-    </div>
-
     <footer>
-        <div style="text-align: center; font-size: 0.8rem; color: #888;">
-            &copy; 2026 École de Prière des Jeunes - Diocèse de Belley-Ars.
+        <div class="footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom: 20px;">EPJ 2026</div>
+                <p>Pastorale des Jeunes et des Vocations</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>Gaëlle-Marie CIEREN</p>
+                <p>06 23 25 60 49</p>
+                <p>paje.ain@gmail.com</p>
+            </div>
+            <div>
+                <h4>Adresse</h4>
+                <p>31, rue Dr Nodet</p>
+                <p>CS 60154</p>
+                <p>01004 Bourg Cedex</p>
+            </div>
+        </div>
+        <div style="text-align: center; border-top: 1px solid #ddd; padding-top: 30px; font-size: 0.8rem; color: #888;">
+            &copy; 2026 École de Prière des Jeunes - Diocèse de Belley-Ars. Tous droits réservés.
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ duration: 1000, once: true });
-
-        function openVenio() {
-            const modal = document.getElementById('venio-modal');
-            const iframe = document.getElementById('venio-iframe');
-            
-            // On recharge la source de l'iframe à chaque ouverture pour éviter 
-            // d'afficher une vieille erreur CSRF stockée en cache
-            iframe.src = "https://ecoledeprierejeunes2026-institutionlamartinebelley.venio.fr/fr";
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeVenio() {
-            document.getElementById('venio-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
     </script>
 </body>
 </html>
