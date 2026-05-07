@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPJ 2026 | École de Prière des Jeunes</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent: #7C4DFF; /* Violet spirituel moderne */
+            --accent-soft: #EDE7F6;
+            --dark: #1A1A2E;
+            --light: #FDFDFF;
+            --glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--light); 
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(253, 253, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: var(--accent); }
+
+        /* --- HERO --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(rgba(26, 26, 46, 0.4), rgba(26, 26, 46, 0.4)), url('https://moncamp.fr/video/cover.png') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero-tagline {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero-box {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 30px 50px;
+            border-radius: 24px;
+            color: var(--dark);
+            display: inline-flex;
+            gap: 40px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+
+        .hero-box i { color: var(--accent); margin-right: 8px; }
+
+        /* --- VIDEO SECTION --- */
+        .video-reveal {
+            max-width: 1100px;
+            margin: -100px auto 80px;
+            position: relative;
+            z-index: 10;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            background: black;
+        }
+        video { width: 100%; display: block; }
+
+        /* --- CONTENT SECTIONS --- */
+        section { padding: 100px 5%; max-width: 1300px; margin: 0 auto; }
+        
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 80px; 
+            align-items: center; 
+        }
+
+        .section-tag {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        h2 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 25px; }
+
+        .about-text { font-size: 1.1rem; color: #555; }
+
+        /* --- CARDS --- */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; display: block; }
+
+        /* --- CTA --- */
+        .cta-box {
+            background: var(--dark);
+            color: white;
+            padding: 80px;
+            border-radius: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-main {
+            background: var(--accent);
+            color: white;
+            padding: 20px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(124, 77, 255, 0.4); }
+
+        /* --- REGISTRATION MODAL --- */
+        #venio-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+            border-bottom: 1px solid #eee;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #f4f4f9;
+            padding: 80px 5% 40px;
+            margin-top: 50px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 40px; }
+            .hero-box { flex-direction: column; gap: 15px; padding: 20px; }
+            .hero-content h1 { font-size: 3rem; }
+            nav { padding: 15px 20px; }
+            .cta-box { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">EPJ 2026</div>
+        <button class="btn-main" onclick="openVenio()" style="padding: 10px 25px; font-size: 0.9rem;">S'inscrire</button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content" data-aos="fade-up">
+            <span class="hero-tagline">9ème Édition • Diocèse de Belley-Ars</span>
+            <h1>École de Prière <br>des Jeunes</h1>
+            <div class="hero-box">
+                <div><i class="fa-solid fa-calendar"></i> 16 — 22 Août 2026</div>
+                <div><i class="fa-solid fa-location-dot"></i> Belley, France</div>
+                <div><i class="fa-solid fa-children"></i> 7 — 17 ans</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="video-reveal" data-aos="zoom-in-up">
+        <video controls poster="https://moncamp.fr/video/cover.png">
+            <source src="https://moncamp.fr/video/TEASER%20EPJ%202026.webm" type="video/webm">
+            <source src="https://moncamp.fr/video/TEASER%20EPJ%202026.mov" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+    </div>
+
+    <section id="concept">
+        <div class="grid-2">
+            <div data-aos="fade-right">
+                <span class="section-tag">Le Concept</span>
+                <h2>Vivre une semaine à l'école du Seigneur</h2>
+                <p class="about-text">
+                    Les Écoles de Prière Jeunes (EPJ) proposent de venir se mettre à l'écoute de la Parole de Dieu pour grandir dans l'intimité avec Lui, tout en vivant des temps de détente et de fraternité intenses.<br><br>
+                    Nées au Puy-en-Velay en 1983 et regroupées au sein du "CEP", ces écoles rayonnent aujourd'hui partout en France.
+                </p>
+            </div>
+            <div class="card" style="background: var(--accent); color: white;" data-aos="fade-left">
+                <h3>Infos Pratiques</h3>
+                <br>
+                <p><i class="fa-solid fa-clock" style="color: white; font-size: 1rem;"></i> <strong>Début :</strong> Dimanche 16 août, 10:30</p>
+                <p><i class="fa-solid fa-flag-checkered" style="color: white; font-size: 1rem;"></i> <strong>Fin :</strong> Samedi 22 août, 16:30</p>
+                <p><i class="fa-solid fa-building-columns" style="color: white; font-size: 1rem;"></i> <strong>Lieu :</strong> Institution Lamartine, Belley</p>
+                <hr style="margin: 20px 0; opacity: 0.3;">
+                <div style="font-size: 2rem; font-weight: 800;">200,00 €</div>
+                <p>Tout compris</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background-color: #fff;">
+        <span class="section-tag" style="text-align: center;">Sécurité & Confiance</span>
+        <h2 style="text-align: center;">Une équipe passionnée</h2>
+        <div class="cards-container">
+            <div class="card" data-aos="fade-up">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Cadre Légal</h3>
+                <p>Camp déclaré au Service départemental à la jeunesse. Encadrement professionnel avec directeurs BAFD et animateurs BAFA.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fa-solid fa-hands-praying"></i>
+                <h3>Accompagnement</h3>
+                <p>Une équipe mixte de bénévoles : prêtres, religieuses, parents, jeunes pros et étudiants au service des enfants.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fa-solid fa-heart"></i>
+                <h3>Projet Éducatif</h3>
+                <p>Le projet répond aux exigences de la charte de l’Association « LE CEP », garantissant bienveillance et pédagogie chrétienne.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="cta-box" data-aos="zoom-in">
+            <h2 style="color: white;">Prêt pour l'aventure ?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9;">Les places sont limitées pour cette 9ème édition à Belley.</p>
+            <button class="btn-main" onclick="openVenio()">Accéder à l'inscription en ligne</button>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">Paiement sécurisé via Venio</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom: 20px;">EPJ 2026</div>
+                <p>Pastorale des Jeunes et des Vocations</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>Gaëlle-Marie CIEREN</p>
+                <p>06 23 25 60 49</p>
+                <p>paje.ain@gmail.com</p>
+            </div>
+            <div>
+                <h4>Adresse</h4>
+                <p>31, rue Dr Nodet</p>
+                <p>CS 60154</p>
+                <p>01004 Bourg Cedex</p>
+            </div>
+        </div>
+        <div style="text-align: center; border-top: 1px solid #ddd; padding-top: 30px; font-size: 0.8rem; color: #888;">
+            &copy; 2026 École de Prière des Jeunes - Diocèse de Belley-Ars. Tous droits réservés.
+        </div>
+    </footer>
+
+    <div id="venio-modal">
+        <div class="modal-header">
+            <div style="font-weight: 800;">Inscription EPJ 2026</div>
+            <button onclick="closeVenio()" style="border: none; background: #eee; padding: 10px 20px; border-radius: 10px; cursor: pointer;">Fermer</button>
+        </div>
+        <iframe src="https://ecoledeprierejeunes2026-institutionlamartinebelley.venio.fr/fr" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        function openVenio() {
+            document.getElementById('venio-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVenio() {
+            document.getElementById('venio-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
