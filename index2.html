@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -189,7 +188,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(61, 64, 91, 0.7), rgba(224, 122, 95, 0.6));
+            /* Le dégradé se termine exactement sur var(--primary) pour une fusion parfaite avec la section du dessous */
+            background: linear-gradient(to bottom, rgba(61, 64, 91, 0.8) 0%, var(--primary) 100%);
         }
         .hero-content {
             position: relative;
@@ -207,33 +207,29 @@
             filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
         }
 
-/* --- FONDS FLUIDES ARRONDIS (Vagues) --- */
+        /* --- FONDS FLUIDES ARRONDIS (Vagues) --- */
         .bg-curved {
             position: relative;
             background: var(--primary);
             color: white;
-            padding: 80px 5%;
-            margin: 60px 0; /* Laisse exactement l'espace pour la vague */
+            /* On enlève le margin-top pour qu'il soit collé au hero */
+            margin: 0 0 80px 0; 
+            padding: 40px 5% 100px 5%;
         }
         
-        .bg-curved::before, .bg-curved::after {
+        /* Plus de ::before, la transition en haut est invisible grâce au dégradé */
+
+        /* Vague du bas uniquement, élargie pour casser l'angle sec */
+        .bg-curved::after {
             content: '';
             position: absolute;
-            left: -5%; /* Fait déborder la vague pour éviter "l'angle" sec sur les bords */
-            width: 110%; /* Compense le débordement */
-            height: 120px; /* Une vague un peu plus haute pour être plus douce */
+            left: -5%; 
+            width: 110%;
+            bottom: -50px;
+            height: 100px;
             background: var(--primary);
-            z-index: -1;
-        }
-        
-        .bg-curved::before {
-            top: -55px; /* Légèrement moins que la moitié de 120px pour assurer qu'aucune ligne blanche ne passe */
-            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-        }
-        
-        .bg-curved::after {
-            bottom: -55px;
             border-radius: 0 0 50% 50% / 0 0 100% 100%;
+            z-index: -1;
         }
 
         .bg-curved h2 { color: white; }
