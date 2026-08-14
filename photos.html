@@ -56,6 +56,88 @@
       z-index: -1;
     }
 
+    /* -------------------------------------------
+       STYLES DE LA FENÊTRE DE CONNEXION
+    ------------------------------------------- */
+    #login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #f16d82;
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .login-box button:hover {
+      background: #f67c87;
+      transform: translateY(-2px);
+    }
+
+    .error-msg {
+      color: #ffcccc;
+      font-size: 0.95rem;
+      margin-top: 15px;
+      display: none;
+      font-weight: 600;
+      background: rgba(255, 0, 0, 0.2);
+      padding: 8px;
+      border-radius: 8px;
+    }
+
     /* Conteneur principal */
     .container {
       max-width: 1200px;
@@ -63,6 +145,9 @@
       padding: 40px 20px;
       position: relative;
       z-index: 1;
+      /* Masqué par défaut jusqu'à la connexion réussie */
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
     /* En-tête */
@@ -190,26 +275,37 @@
 </head>
 <body>
 
-  <div class="container">
+  <!-- ÉCRAN DE CONNEXION -->
+  <div id="login-overlay">
+    <div class="login-box">
+      <h2>Accès sécurisé</h2>
+      <p style="margin-bottom: 20px; font-size: 0.9rem;">Veuillez entrer le code d'accès pour voir les photos du camp.</p>
+      <input type="password" id="access-code" placeholder="Code d'accès" />
+      <button onclick="checkCode()">Valider</button>
+      <div id="error-msg" class="error-msg">Code incorrect, veuillez réessayer.</div>
+    </div>
+  </div>
+
+  <div class="container" id="main-content">
     <!-- En-tête de la page -->
     <header>
       <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo du Camp" class="logo">
       <h1>Journal du Camp</h1>
-      <p class="subtitle">Chaque soir, retrouvez ici les photos des grands jeux et des activités préparées par Charlotte et toute l'équipe d'animation. De beaux souvenirs en images pour suivre leurs aventures !</p>
     </header>
 
     <!-- Sommaire des jours -->
     <div class="grid">
       
-      <!-- JOUR 1 (Actif) -->
-      <a href="J1.html" class="card">
+
+
+       <div class="card locked">
         <svg class="icon" viewBox="0 0 24 24">
-          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
         </svg>
         <h2>Jour 1</h2>
         <p class="date">16 Août 2026</p>
-      </a>
-
+      </div>
+      
       <!-- JOUR 2 (À venir - design verrouillé) -->
       <div class="card locked">
         <svg class="icon" viewBox="0 0 24 24">
@@ -271,6 +367,41 @@
       <p>Merci de votre confiance ! À demain pour de nouvelles photos.</p>
     </footer>
   </div>
+
+  <!-- SCRIPT POUR GÉRER L'ACCÈS -->
+  <script>
+    // Bloque le défilement tant que la page n'est pas déverrouillée
+    document.body.style.overflow = 'hidden';
+
+    function checkCode() {
+      const codeInput = document.getElementById('access-code').value;
+      const errorMsg = document.getElementById('error-msg');
+      const overlay = document.getElementById('login-overlay');
+      const mainContent = document.getElementById('main-content');
+
+      if (codeInput === 'PaJe26') {
+        // Code correct : on fait disparaître l'overlay
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.visibility = 'hidden';
+          // On affiche le contenu principal
+          mainContent.style.opacity = '1';
+          // On réactive le défilement
+          document.body.style.overflow = 'auto';
+        }, 500); // Temps de l'animation CSS
+      } else {
+        // Code incorrect : on affiche le message d'erreur
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    // Permet de valider avec la touche "Entrée" du clavier
+    document.getElementById('access-code').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        checkCode();
+      }
+    });
+  </script>
 
 </body>
 </html>
