@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Souvenirs du Camp - Albums Photos</title>
+  <style>
+    /* Importation de la police Outfit (unique, ronde, très lisible) */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Empêche le défilement horizontal de droite à gauche */
+    html, body {
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      width: 100%;
+      
+      /* Dégradé Mesh pur CSS de ta DA */
+      background-color: #f67c87;
+      background-image: 
+        radial-gradient(at 0% 0%, #a2e2c4 0px, transparent 55%),
+        radial-gradient(at 100% 0%, #fbbd86 0px, transparent 50%),
+        radial-gradient(at 100% 100%, #9ba3f0 0px, transparent 55%),
+        radial-gradient(at 0% 100%, #f16d82 0px, transparent 50%),
+        radial-gradient(at 50% 50%, #f88585 0px, transparent 65%);
+      background-size: 100% 100%;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      position: relative;
+      
+      /* Application de la nouvelle police un peu grasse (500) */
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      color: #333;
+    }
+
+    /* Calque de texture / grain numérique */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.22;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: -1;
+    }
+
+    /* Conteneur principal */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* En-tête */
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .logo {
+      max-width: 180px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+      font-weight: 600; /* Titre un peu plus gras */
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.95);
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      font-weight: 400;
+    }
+
+    /* Grille des jours */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    /* Carte d'un jour (Style Glassmorphism) */
+    .card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Animation au survol */
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.2);
+    }
+
+    .card h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-weight: 600;
+    }
+
+    .card p.date {
+      font-size: 1rem;
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 5px 15px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .card p.desc {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    /* Icône SVG photo */
+    .icon {
+      width: 45px;
+      height: 45px;
+      margin-bottom: 15px;
+      fill: #fff;
+      opacity: 0.9;
+    }
+
+    /* Style pour les jours à venir (verrouillés) */
+    .card.locked {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+    }
+    .card.locked h2, .card.locked p, .card.locked .icon {
+      opacity: 0.5;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Responsive Design pour les téléphones */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .container { padding: 20px 15px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- En-tête de la page -->
+    <header>
+      <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo du Camp" class="logo">
+      <h1>Journal du Camp</h1>
+      <p class="subtitle">Chaque soir, retrouvez ici les photos des grands jeux et des activités préparées par Charlotte et toute l'équipe d'animation. De beaux souvenirs en images pour suivre leurs aventures !</p>
+    </header>
+
+    <!-- Sommaire des jours -->
+    <div class="grid">
+      
+      <!-- JOUR 1 (Actif) -->
+      <a href="J1.html" class="card">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+        <h2>Jour 1</h2>
+        <p class="date">16 Août 2026</p>
+      </a>
+
+      <!-- JOUR 2 (À venir - design verrouillé) -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 2</h2>
+        <p class="date">17 Août 2026</p>
+      </div>
+
+      <!-- JOUR 3 -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 3</h2>
+        <p class="date">18 Août 2026</p>
+      </div>
+
+      <!-- JOUR 4 -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 4</h2>
+        <p class="date">19 Août 2026</p>
+      </div>
+
+      <!-- JOUR 5 -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 5</h2>
+        <p class="date">20 Août 2026</p>
+      </div>
+
+      <!-- JOUR 6 -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 6</h2>
+        <p class="date">21 Août 2026</p>
+      </div>
+
+      <!-- JOUR 7 -->
+      <div class="card locked">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>
+        </svg>
+        <h2>Jour 7</h2>
+        <p class="date">22 Août 2026</p>
+      </div>
+
+    </div>
+
+    <!-- Pied de page -->
+    <footer>
+      <p>Merci de votre confiance ! À demain pour de nouvelles photos.</p>
+    </footer>
+  </div>
+
+</body>
+</html>
