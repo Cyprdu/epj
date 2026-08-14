@@ -56,6 +56,88 @@
       z-index: -1;
     }
 
+    /* -------------------------------------------
+       STYLES DE LA FENÊTRE DE CONNEXION
+    ------------------------------------------- */
+    #login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #f16d82;
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .login-box button:hover {
+      background: #f67c87;
+      transform: translateY(-2px);
+    }
+
+    .error-msg {
+      color: #ffcccc;
+      font-size: 0.95rem;
+      margin-top: 15px;
+      display: none;
+      font-weight: 600;
+      background: rgba(255, 0, 0, 0.2);
+      padding: 8px;
+      border-radius: 8px;
+    }
+
     /* Conteneur principal */
     .container {
       max-width: 1200px;
@@ -63,6 +145,9 @@
       padding: 40px 20px;
       position: relative;
       z-index: 1;
+      /* Masqué par défaut jusqu'à la connexion réussie */
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
     /* En-tête */
@@ -190,7 +275,18 @@
 </head>
 <body>
 
-  <div class="container">
+  <!-- ÉCRAN DE CONNEXION -->
+  <div id="login-overlay">
+    <div class="login-box">
+      <h2>Accès sécurisé</h2>
+      <p style="margin-bottom: 20px; font-size: 0.9rem;">Veuillez entrer le code d'accès pour voir les photos du camp.</p>
+      <input type="password" id="access-code" placeholder="Code d'accès" />
+      <button onclick="checkCode()">Valider</button>
+      <div id="error-msg" class="error-msg">Code incorrect, veuillez réessayer.</div>
+    </div>
+  </div>
+
+  <div class="container" id="main-content">
     <!-- En-tête de la page -->
     <header>
       <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo du Camp" class="logo">
@@ -271,6 +367,41 @@
       <p>Merci de votre confiance ! À demain pour de nouvelles photos.</p>
     </footer>
   </div>
+
+  <!-- SCRIPT POUR GÉRER L'ACCÈS -->
+  <script>
+    // Bloque le défilement tant que la page n'est pas déverrouillée
+    document.body.style.overflow = 'hidden';
+
+    function checkCode() {
+      const codeInput = document.getElementById('access-code').value;
+      const errorMsg = document.getElementById('error-msg');
+      const overlay = document.getElementById('login-overlay');
+      const mainContent = document.getElementById('main-content');
+
+      if (codeInput === 'PaJe26') {
+        // Code correct : on fait disparaître l'overlay
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.visibility = 'hidden';
+          // On affiche le contenu principal
+          mainContent.style.opacity = '1';
+          // On réactive le défilement
+          document.body.style.overflow = 'auto';
+        }, 500); // Temps de l'animation CSS
+      } else {
+        // Code incorrect : on affiche le message d'erreur
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    // Permet de valider avec la touche "Entrée" du clavier
+    document.getElementById('access-code').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        checkCode();
+      }
+    });
+  </script>
 
 </body>
 </html>
