@@ -10,7 +10,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       min-height: 100vh;
       width: 100vw;
@@ -29,7 +28,6 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow-x: hidden;
     }
-
     /* Calque de grain numérique */
     body::before {
       content: "";
@@ -43,7 +41,6 @@
       z-index: 1;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
-
     /* En-tête */
     header {
       position: relative;
@@ -54,7 +51,6 @@
       padding: 30px 20px 10px;
       width: 100%;
     }
-
     /* Logo PaJe plus grand */
     .logo-container {
       position: absolute;
@@ -65,29 +61,24 @@
       z-index: 3;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
     }
-
     .logo-container img {
       width: 100%;
       height: auto;
       display: block;
     }
-
     .header-text {
       text-align: center;
       color: #ffffff;
       text-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-
     header h1 {
       font-size: 2.8rem;
       margin-bottom: 5px;
     }
-
     header p {
       font-size: 1.2rem;
       opacity: 0.95;
     }
-
     /* Conteneur principal */
     .path-container {
       position: relative;
@@ -96,7 +87,6 @@
       margin: 0 auto;
       padding: 40px 20px 100px;
     }
-
     /* Grille 3 par 3 */
     .photo-grid {
       display: grid;
@@ -105,7 +95,6 @@
       position: relative;
       z-index: 2;
     }
-
     /* SVG pour la ligne en pointillés */
     .svg-path {
       position: absolute;
@@ -116,7 +105,6 @@
       pointer-events: none;
       z-index: 1;
     }
-
     .svg-path path {
       fill: none;
       stroke: rgba(255, 255, 255, 0.9);
@@ -124,14 +112,12 @@
       stroke-dasharray: 12, 12;
       stroke-linecap: round;
     }
-
     /* Cartes Photos */
     .photo-node {
       display: flex;
       justify-content: center;
       align-items: center;
     }
-
     .photo-card {
       background: rgba(255, 255, 255, 0.88);
       padding: 14px 14px 22px 14px;
@@ -144,19 +130,16 @@
       text-align: center;
       backdrop-filter: blur(5px);
     }
-
     .photo-card:hover {
       transform: translateY(-8px) scale(1.03);
       box-shadow: 0 18px 40px rgba(0,0,0,0.25);
     }
-
     .photo-card img {
       width: 100%;
       height: 250px;
       object-fit: cover;
       border-radius: 10px;
     }
-
     .photo-card .badge {
       display: inline-block;
       margin-top: 12px;
@@ -164,7 +147,6 @@
       font-weight: bold;
       color: #444;
     }
-
     /* Lightbox (Plein écran) */
     .lightbox {
       display: none;
@@ -179,11 +161,9 @@
       align-items: center;
       backdrop-filter: blur(10px);
     }
-
     .lightbox.active {
       display: flex;
     }
-
     .lightbox img {
       max-width: 95vw;
       max-height: 95vh;
@@ -191,7 +171,6 @@
       box-shadow: 0 0 40px rgba(0,0,0,0.6);
       object-fit: contain;
     }
-
     .lightbox-close {
       position: absolute;
       top: 15px;
@@ -202,11 +181,9 @@
       cursor: pointer;
       user-select: none;
     }
-
     /* ========================================== */
     /* RESPONSIVE DESIGN                          */
     /* ========================================== */
-
     /* Tablettes (2 colonnes) */
     @media (max-width: 992px) {
       .logo-container {
@@ -214,24 +191,20 @@
         top: 20px;
         left: 20px;
       }
-
       .photo-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 50px 20px;
       }
-
       header h1 {
         font-size: 2.2rem;
       }
     }
-
     /* Mobiles (1 colonne) */
     @media (max-width: 650px) {
       header {
         flex-direction: column;
         padding-top: 15px;
       }
-
       .logo-container {
         position: relative;
         top: 0;
@@ -239,20 +212,16 @@
         width: 110px;
         margin-bottom: 15px;
       }
-
       header h1 {
         font-size: 1.8rem;
       }
-
       .photo-grid {
         grid-template-columns: 1fr;
         gap: 35px;
       }
-
       .photo-card img {
         height: 220px;
       }
-
       .svg-path {
         display: none;
       }
@@ -265,7 +234,6 @@
     <div class="logo-container">
       <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo PaJe">
     </div>
-
     <div class="header-text">
       <h1>EPJ 2026 - Jour 1</h1>
       <p></p>
@@ -278,192 +246,157 @@
       <path id="pathLine" d="" />
     </svg>
 
+    <div class="photo-grid" id="photoGrid">
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/1.jpg')">
+          <img src="/photo/1.jpg" alt="Photo 1" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/2.jpg')">
+          <img src="/photo/2.jpg" alt="Photo 2" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/3.jpeg')">
+          <img src="/photo/3.jpeg" alt="Photo 3" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/4.jpeg')">
+          <img src="/photo/4.jpeg" alt="Photo 4" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/5.jpeg')">
+          <img src="/photo/5.jpeg" alt="Photo 5" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/6.jpeg')">
+          <img src="/photo/6.jpeg" alt="Photo 6" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/7.jpeg')">
+          <img src="/photo/7.jpeg" alt="Photo 7" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/8.jpeg')">
+          <img src="/photo/8.jpeg" alt="Photo 8" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/9.jpeg')">
+          <img src="/photo/9.jpeg" alt="Photo 9" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/10.jpeg')">
+          <img src="/photo/10.jpeg" alt="Photo 10" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/11.jpeg')">
+          <img src="/photo/11.jpeg" alt="Photo 11" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/12.jpeg')">
+          <img src="/photo/12.jpeg" alt="Photo 12" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/13.jpeg')">
+          <img src="/photo/13.jpeg" alt="Photo 13" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/14.jpeg')">
+          <img src="/photo/14.jpeg" alt="Photo 14" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/15.jpeg')">
+          <img src="/photo/15.jpeg" alt="Photo 15" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/16.jpeg')">
+          <img src="/photo/16.jpeg" alt="Photo 16" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/17.jpeg')">
+          <img src="/photo/17.jpeg" alt="Photo 17" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/18.jpeg')">
+          <img src="/photo/18.jpeg" alt="Photo 18" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/19.jpeg')">
+          <img src="/photo/19.jpeg" alt="Photo 19" loading="lazy">
+        </div>
+      </div>
 
+      <!-- Note: Pas de photo 20 dans votre code d'origine -->
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/21.jpeg')">
+          <img src="/photo/21.jpeg" alt="Photo 21" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/22.jpeg')">
+          <img src="/photo/22.jpeg" alt="Photo 22" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/23.jpeg')">
+          <img src="/photo/23.jpeg" alt="Photo 23" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/24.jpeg')">
+          <img src="/photo/24.jpeg" alt="Photo 24" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/25.jpeg')">
+          <img src="/photo/25.jpeg" alt="Photo 25" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/26.jpeg')">
+          <img src="/photo/26.jpeg" alt="Photo 26" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/27.jpeg')">
+          <img src="/photo/27.jpeg" alt="Photo 27" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/28.jpeg')">
+          <img src="/photo/28.jpeg" alt="Photo 28" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/29.jpeg')">
+          <img src="/photo/29.jpeg" alt="Photo 29" loading="lazy">
+        </div>
+      </div>
+      <div class="photo-node">
+        <div class="photo-card" onclick="openLightbox('/photo/30.jpeg')">
+          <img src="/photo/30.jpeg" alt="Photo 30" loading="lazy">
+        </div>
+      </div>
 
-
-
-<div class="photo-grid" id="photoGrid">
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/1.jpg')">
-      <img src="/photo/1.jpg" alt="Photo 1" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/2.jpg')">
-      <img src="/photo/2.jpg" alt="Photo 2" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/3.jpeg')">
-      <img src="/photo/3.jpeg" alt="Photo 3" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/4.jpeg')">
-      <img src="/photo/4.jpeg" alt="Photo 4" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/5.jpeg')">
-      <img src="/photo/5.jpeg" alt="Photo 5" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/6.jpeg')">
-      <img src="/photo/6.jpeg" alt="Photo 6" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/7.jpeg')">
-      <img src="/photo/7.jpeg" alt="Photo 7" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/8.jpeg')">
-      <img src="/photo/8.jpeg" alt="Photo 8" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/9.jpeg')">
-      <img src="/photo/9.jpeg" alt="Photo 9" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/10.jpeg')">
-      <img src="/photo/10.jpeg" alt="Photo 10" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/11.jpeg')">
-      <img src="/photo/11.jpeg" alt="Photo 11" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/12.jpeg')">
-      <img src="/photo/12.jpeg" alt="Photo 12" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/13.jpeg')">
-      <img src="/photo/13.jpeg" alt="Photo 13" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/14.jpeg')">
-      <img src="/photo/14.jpeg" alt="Photo 14" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/15.jpeg')">
-      <img src="/photo/15.jpeg" alt="Photo 15" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/16.jpeg')">
-      <img src="/photo/16.jpeg" alt="Photo 16" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/17.jpeg')">
-      <img src="/photo/17.jpeg" alt="Photo 17" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/18.jpeg')">
-      <img src="/photo/18.jpeg" alt="Photo 18" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/19.jpeg')">
-      <img src="/photo/19.jpeg" alt="Photo 19" loading="lazy">
-    </div>
-  </div>
-
-
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/21.jpeg')">
-      <img src="/photo/21.jpeg" alt="Photo 21" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/22.jpeg')">
-      <img src="/photo/22.jpeg" alt="Photo 22" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/23.jpeg')">
-      <img src="/photo/23.jpeg" alt="Photo 23" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/24.jpeg')">
-      <img src="/photo/24.jpeg" alt="Photo 24" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/25.jpeg')">
-      <img src="/photo/25.jpeg" alt="Photo 25" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/26.jpeg')">
-      <img src="/photo/26.jpeg" alt="Photo 26" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/27.jpeg')">
-      <img src="/photo/27.jpeg" alt="Photo 27" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/28.jpeg')">
-      <img src="/photo/28.jpeg" alt="Photo 28" loading="lazy">
-    </div>
-  </div>
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/29.jpeg')">
-      <img src="/photo/29.jpeg" alt="Photo 29" loading="lazy">
-    </div>
-  </div>
-</div>
-
-
-
-  <div class="photo-node">
-    <div class="photo-card" onclick="openLightbox('/photo/30.jpeg')">
-      <img src="/photo/30.jpeg" alt="Photo 30" loading="lazy">
-    </div>
-  </div>
-</div>
-
-
+    </div> <!-- Fin correcte de .photo-grid -->
+  </div> <!-- Fin correcte de .path-container -->
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
@@ -526,13 +459,11 @@
     }
 
     function closeLightbox() {
-      // Voici la ligne corrigée (il manquait le guillemet fermant après lightbox)
       document.getElementById('lightbox').classList.remove('active');
     }
 
     window.addEventListener('load', drawPath);
     window.addEventListener('resize', drawPath);
   </script>
-
 </body>
 </html>
