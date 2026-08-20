@@ -5,11 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Camp EPJ 2026 - Jour 3</title>
   <style>
+    /* Intégration de la police Apfel Grotezk */
+    @font-face {
+      font-family: 'Apfel Grotezk';
+      src: url('ApfelGrotezk-Fett.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       min-height: 100vh;
       width: 100vw;
@@ -25,9 +34,11 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       position: relative;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Application de la police Apfel Grotezk */
+      font-family: 'Apfel Grotezk', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow-x: hidden;
     }
+
     /* Calque de grain numérique */
     body::before {
       content: "";
@@ -41,6 +52,7 @@
       z-index: 1;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
+
     /* En-tête */
     header {
       position: relative;
@@ -51,6 +63,7 @@
       padding: 30px 20px 10px;
       width: 100%;
     }
+
     /* Logo PaJe plus grand */
     .logo-container {
       position: absolute;
@@ -74,11 +87,13 @@
     header h1 {
       font-size: 2.8rem;
       margin-bottom: 5px;
+      font-weight: normal; /* La police Fett est déjà en gras */
     }
     header p {
       font-size: 1.2rem;
       opacity: 0.95;
     }
+
     /* Conteneur principal */
     .path-container {
       position: relative;
@@ -87,6 +102,7 @@
       margin: 0 auto;
       padding: 40px 20px 100px;
     }
+
     /* Grille 3 par 3 */
     .photo-grid {
       display: grid;
@@ -95,6 +111,7 @@
       position: relative;
       z-index: 2;
     }
+
     /* SVG pour la ligne en pointillés */
     .svg-path {
       position: absolute;
@@ -112,6 +129,7 @@
       stroke-dasharray: 12, 12;
       stroke-linecap: round;
     }
+
     /* Cartes Photos */
     .photo-node {
       display: flex;
@@ -147,6 +165,7 @@
       font-weight: bold;
       color: #444;
     }
+
     /* Lightbox (Plein écran) */
     .lightbox {
       display: none;
@@ -181,6 +200,7 @@
       cursor: pointer;
       user-select: none;
     }
+
     /* ========================================== */
     /* RESPONSIVE DESIGN                          */
     /* ========================================== */
@@ -227,6 +247,7 @@
   </style>
 </head>
 <body>
+
   <header>
     <div class="logo-container">
       <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo PaJe">
@@ -243,265 +264,61 @@
       <path id="pathLine" d="" />
     </svg>
 
-    <!-- LA GRILLE A ÉTÉ AJOUTÉE ICI -->
+    <!-- GRILLE DES PHOTOS -->
     <div class="photo-grid">
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/85.jpeg')">
-          <img src="photo/85.jpeg" alt="Photo 85" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/86.jpeg')">
-          <img src="photo/86.jpeg" alt="Photo 86" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/87.jpeg')">
-          <img src="photo/87.jpeg" alt="Photo 87" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/88.jpeg')">
-          <img src="photo/88.jpeg" alt="Photo 88" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/89.jpeg')">
-          <img src="photo/89.jpeg" alt="Photo 89" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/90.jpeg')">
-          <img src="photo/90.jpeg" alt="Photo 90" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/91.jpeg')">
-          <img src="photo/91.jpeg" alt="Photo 91" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/92.jpeg')">
-          <img src="photo/92.jpeg" alt="Photo 92" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/93.jpeg')">
-          <img src="photo/93.jpeg" alt="Photo 93" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/94.jpeg')">
-          <img src="photo/94.jpeg" alt="Photo 94" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/95.jpeg')">
-          <img src="photo/95.jpeg" alt="Photo 95" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/96.jpeg')">
-          <img src="photo/96.jpeg" alt="Photo 96" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/97.jpeg')">
-          <img src="photo/97.jpeg" alt="Photo 97" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/99.jpeg')">
-          <img src="photo/99.jpeg" alt="Photo 99" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/100.jpeg')">
-          <img src="photo/100.jpeg" alt="Photo 100" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/101.jpeg')">
-          <img src="photo/101.jpeg" alt="Photo 101" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/102.jpeg')">
-          <img src="photo/102.jpeg" alt="Photo 102" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/103.jpeg')">
-          <img src="photo/103.jpeg" alt="Photo 103" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/104.jpeg')">
-          <img src="photo/104.jpeg" alt="Photo 104" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/105.jpeg')">
-          <img src="photo/105.jpeg" alt="Photo 105" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/106.jpeg')">
-          <img src="photo/106.jpeg" alt="Photo 106" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/107.jpeg')">
-          <img src="photo/107.jpeg" alt="Photo 107" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/108.jpeg')">
-          <img src="photo/108.jpeg" alt="Photo 108" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/109.jpeg')">
-          <img src="photo/109.jpeg" alt="Photo 109" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/110.jpeg')">
-          <img src="photo/110.jpeg" alt="Photo 110" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/111.jpeg')">
-          <img src="photo/111.jpeg" alt="Photo 111" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/112.jpeg')">
-          <img src="photo/112.jpeg" alt="Photo 112" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/113.jpeg')">
-          <img src="photo/113.jpeg" alt="Photo 113" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/114.jpeg')">
-          <img src="photo/114.jpeg" alt="Photo 114" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/115.jpeg')">
-          <img src="photo/115.jpeg" alt="Photo 115" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/116.jpeg')">
-          <img src="photo/116.jpeg" alt="Photo 116" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/117.jpeg')">
-          <img src="photo/117.jpeg" alt="Photo 117" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/118.jpeg')">
-          <img src="photo/118.jpeg" alt="Photo 118" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/119.jpeg')">
-          <img src="photo/119.jpeg" alt="Photo 119" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/120.jpeg')">
-          <img src="photo/120.jpeg" alt="Photo 120" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/121.jpeg')">
-          <img src="photo/121.jpeg" alt="Photo 121" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/122.jpeg')">
-          <img src="photo/122.jpeg" alt="Photo 122" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/123.jpeg')">
-          <img src="photo/123.jpeg" alt="Photo 123" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/124.jpeg')">
-          <img src="photo/124.jpeg" alt="Photo 124" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/125.jpeg')">
-          <img src="photo/125.jpeg" alt="Photo 125" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/126.jpeg')">
-          <img src="photo/126.jpeg" alt="Photo 126" loading="lazy">
-        </div>
-      </div>
-      <!-- LA PHOTO 127 A ÉTÉ EXCLUE ICI -->
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/128.jpeg')">
-          <img src="photo/128.jpeg" alt="Photo 128" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/129.jpeg')">
-          <img src="photo/129.jpeg" alt="Photo 129" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/130.jpeg')">
-          <img src="photo/130.jpeg" alt="Photo 130" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/131.jpeg')">
-          <img src="photo/131.jpeg" alt="Photo 131" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/132.jpeg')">
-          <img src="photo/132.jpeg" alt="Photo 132" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/133.jpeg')">
-          <img src="photo/133.jpeg" alt="Photo 133" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/134.jpeg')">
-          <img src="photo/134.jpeg" alt="Photo 134" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/135.jpeg')">
-          <img src="photo/135.jpeg" alt="Photo 135" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/136.jpeg')">
-          <img src="photo/136.jpeg" alt="Photo 136" loading="lazy">
-        </div>
-      </div>
-      <div class="photo-node">
-        <div class="photo-card" onclick="openLightbox('photo/137.jpeg')">
-          <img src="photo/137.jpeg" alt="Photo 137" loading="lazy">
-        </div>
-      </div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/85.jpeg')"><img src="photo/85.jpeg" alt="Photo 85" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/86.jpeg')"><img src="photo/86.jpeg" alt="Photo 86" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/87.jpeg')"><img src="photo/87.jpeg" alt="Photo 87" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/88.jpeg')"><img src="photo/88.jpeg" alt="Photo 88" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/89.jpeg')"><img src="photo/89.jpeg" alt="Photo 89" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/90.jpeg')"><img src="photo/90.jpeg" alt="Photo 90" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/91.jpeg')"><img src="photo/91.jpeg" alt="Photo 91" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/92.jpeg')"><img src="photo/92.jpeg" alt="Photo 92" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/93.jpeg')"><img src="photo/93.jpeg" alt="Photo 93" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/94.jpeg')"><img src="photo/94.jpeg" alt="Photo 94" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/95.jpeg')"><img src="photo/95.jpeg" alt="Photo 95" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/96.jpeg')"><img src="photo/96.jpeg" alt="Photo 96" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/97.jpeg')"><img src="photo/97.jpeg" alt="Photo 97" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/99.jpeg')"><img src="photo/99.jpeg" alt="Photo 99" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/100.jpeg')"><img src="photo/100.jpeg" alt="Photo 100" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/101.jpeg')"><img src="photo/101.jpeg" alt="Photo 101" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/102.jpeg')"><img src="photo/102.jpeg" alt="Photo 102" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/103.jpeg')"><img src="photo/103.jpeg" alt="Photo 103" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/104.jpeg')"><img src="photo/104.jpeg" alt="Photo 104" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/105.jpeg')"><img src="photo/105.jpeg" alt="Photo 105" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/106.jpeg')"><img src="photo/106.jpeg" alt="Photo 106" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/107.jpeg')"><img src="photo/107.jpeg" alt="Photo 107" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/108.jpeg')"><img src="photo/108.jpeg" alt="Photo 108" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/109.jpeg')"><img src="photo/109.jpeg" alt="Photo 109" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/110.jpeg')"><img src="photo/110.jpeg" alt="Photo 110" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/111.jpeg')"><img src="photo/111.jpeg" alt="Photo 111" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/112.jpeg')"><img src="photo/112.jpeg" alt="Photo 112" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/113.jpeg')"><img src="photo/113.jpeg" alt="Photo 113" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/114.jpeg')"><img src="photo/114.jpeg" alt="Photo 114" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/115.jpeg')"><img src="photo/115.jpeg" alt="Photo 115" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/116.jpeg')"><img src="photo/116.jpeg" alt="Photo 116" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/117.jpeg')"><img src="photo/117.jpeg" alt="Photo 117" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/118.jpeg')"><img src="photo/118.jpeg" alt="Photo 118" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/119.jpeg')"><img src="photo/119.jpeg" alt="Photo 119" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/120.jpeg')"><img src="photo/120.jpeg" alt="Photo 120" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/121.jpeg')"><img src="photo/121.jpeg" alt="Photo 121" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/122.jpeg')"><img src="photo/122.jpeg" alt="Photo 122" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/123.jpeg')"><img src="photo/123.jpeg" alt="Photo 123" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/124.jpeg')"><img src="photo/124.jpeg" alt="Photo 124" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/125.jpeg')"><img src="photo/125.jpeg" alt="Photo 125" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/126.jpeg')"><img src="photo/126.jpeg" alt="Photo 126" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/128.jpeg')"><img src="photo/128.jpeg" alt="Photo 128" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/129.jpeg')"><img src="photo/129.jpeg" alt="Photo 129" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/130.jpeg')"><img src="photo/130.jpeg" alt="Photo 130" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/131.jpeg')"><img src="photo/131.jpeg" alt="Photo 131" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/132.jpeg')"><img src="photo/132.jpeg" alt="Photo 132" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/133.jpeg')"><img src="photo/133.jpeg" alt="Photo 133" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/134.jpeg')"><img src="photo/134.jpeg" alt="Photo 134" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/135.jpeg')"><img src="photo/135.jpeg" alt="Photo 135" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/136.jpeg')"><img src="photo/136.jpeg" alt="Photo 136" loading="lazy"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/137.jpeg')"><img src="photo/137.jpeg" alt="Photo 137" loading="lazy"></div></div>
     </div> <!-- FIN DE LA GRILLE -->
+  </div>
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
