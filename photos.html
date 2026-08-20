@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Souvenirs du Camp - Albums Photos</title>
+  <title>SOUVENIRS DU CAMP - ALBUMS PHOTOS</title>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
- <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <style>
-    /* Importation de la police Outfit (unique, ronde, très lisible) */
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap');
+    /* Importation de la nouvelle police locale */
+    @font-face {
+      font-family: 'NewTitle-Variable';
+      src: url('NewTitle-Variable.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      /* Tout le texte en majuscules */
+      text-transform: uppercase;
     }
 
     /* Empêche le défilement horizontal de droite à gauche */
@@ -39,8 +46,8 @@
       background-repeat: no-repeat;
       position: relative;
       
-      /* Application de la nouvelle police un peu grasse (500) */
-      font-family: 'Outfit', sans-serif;
+      /* Application de la nouvelle police */
+      font-family: 'NewTitle-Variable', sans-serif;
       font-weight: 500;
       color: #333;
     }
@@ -60,7 +67,7 @@
     }
 
     /* -------------------------------------------
-       STYLES DE LA FENÊTRE DE CONNEXION
+        STYLES DE LA FENÊTRE DE CONNEXION
     ------------------------------------------- */
     #login-overlay {
       position: fixed;
@@ -102,7 +109,7 @@
       border-radius: 10px;
       border: none;
       outline: none;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'NewTitle-Variable', sans-serif;
       font-size: 1rem;
       margin-bottom: 15px;
       text-align: center;
@@ -117,7 +124,7 @@
       border: none;
       background: #f16d82;
       color: white;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'NewTitle-Variable', sans-serif;
       font-weight: 600;
       font-size: 1.1rem;
       cursor: pointer;
@@ -170,7 +177,7 @@
       color: #fff;
       text-shadow: 0 2px 10px rgba(0,0,0,0.2);
       margin-bottom: 10px;
-      font-weight: 600; /* Titre un peu plus gras */
+      font-weight: 600;
     }
 
     .subtitle {
@@ -281,11 +288,11 @@
   <!-- ÉCRAN DE CONNEXION -->
   <div id="login-overlay">
     <div class="login-box">
-      <h2>Accès sécurisé</h2>
-      <p style="margin-bottom: 20px; font-size: 0.9rem;">Veuillez entrer le code d'accès pour voir les photos du camp.</p>
-      <input type="password" id="access-code" placeholder="Code d'accès" />
-      <button onclick="checkCode()">Valider</button>
-      <div id="error-msg" class="error-msg">Code incorrect, veuillez réessayer.</div>
+      <h2>ACCÈS SÉCURISÉ</h2>
+      <p style="margin-bottom: 20px; font-size: 0.9rem;">VEUILLEZ ENTRER LE CODE D'ACCÈS POUR VOIR LES PHOTOS DU CAMP.</p>
+      <input type="password" id="access-code" placeholder="CODE D'ACCÈS" />
+      <button onclick="checkCode()">VALIDER</button>
+      <div id="error-msg" class="error-msg">CODE INCORRECT, VEUILLEZ RÉESSAYER.</div>
     </div>
   </div>
 
@@ -293,7 +300,7 @@
     <!-- En-tête de la page -->
     <header>
       <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo du Camp" class="logo">
-      <h1>Journal du Camp</h1>
+      <h1>JOURNAL DU CAMP</h1>
     </header>
 
     <!-- Sommaire des jours -->
@@ -366,31 +373,59 @@
 
     <!-- Pied de page -->
     <footer>
-      <p>Merci de votre confiance ! À demain pour de nouvelles photos.</p>
+      <p>MERCI DE VOTRE CONFIANCE ! À DEMAIN POUR DE NOUVELLES PHOTOS.</p>
     </footer>
   </div>
 
   <!-- SCRIPT POUR GÉRER L'ACCÈS -->
   <script>
-    // Bloque le défilement tant que la page n'est pas déverrouillée
-    document.body.style.overflow = 'hidden';
+    const expectedCode = "PAJE26"; // Le code attendu (en majuscule pour simplifier la validation)
 
-    function checkCode() {
-      const codeInput = document.getElementById('access-code').value;
-      const errorMsg = document.getElementById('error-msg');
+    // Au chargement de la page, on vérifie s'il y a un mot de passe valide en cache
+    window.onload = function() {
+      const cachedCode = localStorage.getItem('campAccessCode');
+      
+      if (cachedCode === expectedCode) {
+        // Déverrouillage immédiat sans animation si on a déjà le code
+        unlockPage(false);
+      } else {
+        // Bloque le défilement tant que la page n'est pas déverrouillée
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    function unlockPage(withAnimation) {
       const overlay = document.getElementById('login-overlay');
       const mainContent = document.getElementById('main-content');
+      const errorMsg = document.getElementById('error-msg');
+      
+      errorMsg.style.display = 'none';
 
-      if (codeInput === 'PaJe26') {
-        // Code correct : on fait disparaître l'overlay
+      if (withAnimation) {
         overlay.style.opacity = '0';
         setTimeout(() => {
           overlay.style.visibility = 'hidden';
-          // On affiche le contenu principal
           mainContent.style.opacity = '1';
-          // On réactive le défilement
           document.body.style.overflow = 'auto';
         }, 500); // Temps de l'animation CSS
+      } else {
+        overlay.style.visibility = 'hidden';
+        overlay.style.opacity = '0';
+        mainContent.style.opacity = '1';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    function checkCode() {
+      // On convertit le texte tapé en majuscule, puisqu'ils le voient visuellement en majuscule (text-transform)
+      const codeInput = document.getElementById('access-code').value.toUpperCase();
+      const errorMsg = document.getElementById('error-msg');
+
+      if (codeInput === expectedCode) {
+        // Code correct : on sauvegarde dans le cache
+        localStorage.setItem('campAccessCode', expectedCode);
+        // Et on déverrouille la page
+        unlockPage(true);
       } else {
         // Code incorrect : on affiche le message d'erreur
         errorMsg.style.display = 'block';
