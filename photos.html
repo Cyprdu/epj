@@ -8,10 +8,18 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <style>
-    /* Importation de la nouvelle police locale */
+    /* Importation de la police pour les titres */
     @font-face {
       font-family: 'NewTitle-Variable';
       src: url('NewTitle-Variable.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* Importation de la police pour les textes */
+    @font-face {
+      font-family: 'ApfelGrotezk-Fett';
+      src: url('ApfelGrotezk-Fett.woff2') format('woff2');
       font-weight: normal;
       font-style: normal;
     }
@@ -46,9 +54,8 @@
       background-repeat: no-repeat;
       position: relative;
       
-      /* Application de la nouvelle police */
-      font-family: 'NewTitle-Variable', sans-serif;
-      font-weight: 500;
+      /* Application de la police des textes par défaut */
+      font-family: 'ApfelGrotezk-Fett', sans-serif;
       color: #333;
     }
 
@@ -64,6 +71,11 @@
       pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       z-index: -1;
+    }
+
+    /* Application de la police des titres */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'NewTitle-Variable', sans-serif;
     }
 
     /* -------------------------------------------
@@ -99,7 +111,7 @@
 
     .login-box h2 {
       margin-bottom: 20px;
-      font-weight: 600;
+      font-weight: normal; /* Le woff2 gère souvent son propre poids */
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -109,7 +121,7 @@
       border-radius: 10px;
       border: none;
       outline: none;
-      font-family: 'NewTitle-Variable', sans-serif;
+      font-family: 'ApfelGrotezk-Fett', sans-serif;
       font-size: 1rem;
       margin-bottom: 15px;
       text-align: center;
@@ -124,8 +136,7 @@
       border: none;
       background: #f16d82;
       color: white;
-      font-family: 'NewTitle-Variable', sans-serif;
-      font-weight: 600;
+      font-family: 'ApfelGrotezk-Fett', sans-serif;
       font-size: 1.1rem;
       cursor: pointer;
       transition: background 0.3s, transform 0.2s;
@@ -142,7 +153,6 @@
       font-size: 0.95rem;
       margin-top: 15px;
       display: none;
-      font-weight: 600;
       background: rgba(255, 0, 0, 0.2);
       padding: 8px;
       border-radius: 8px;
@@ -177,7 +187,7 @@
       color: #fff;
       text-shadow: 0 2px 10px rgba(0,0,0,0.2);
       margin-bottom: 10px;
-      font-weight: 600;
+      font-weight: normal;
     }
 
     .subtitle {
@@ -187,7 +197,6 @@
       margin: 0 auto;
       line-height: 1.6;
       text-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      font-weight: 400;
     }
 
     /* Grille des jours */
@@ -228,7 +237,7 @@
       font-size: 2rem;
       margin-bottom: 10px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      font-weight: 600;
+      font-weight: normal;
     }
 
     .card p.date {
@@ -238,7 +247,6 @@
       padding: 5px 15px;
       border-radius: 20px;
       margin-bottom: 15px;
-      font-weight: 600;
     }
 
     .card p.desc {
@@ -272,7 +280,6 @@
       padding: 20px;
       color: rgba(255, 255, 255, 0.9);
       font-size: 0.95rem;
-      font-weight: 500;
     }
 
     /* Responsive Design pour les téléphones */
