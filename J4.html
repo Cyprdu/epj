@@ -34,7 +34,6 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       position: relative;
-      /* Application de la police Apfel Grotezk */
       font-family: 'Apfel Grotezk', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow-x: hidden;
     }
@@ -64,7 +63,7 @@
       width: 100%;
     }
 
-    /* Logo PaJe plus grand */
+    /* Logo PaJe */
     .logo-container {
       position: absolute;
       top: 25px;
@@ -87,7 +86,7 @@
     header h1 {
       font-size: 2.8rem;
       margin-bottom: 5px;
-      font-weight: normal; /* La police Fett est déjà en gras */
+      font-weight: normal;
     }
     header p {
       font-size: 1.2rem;
@@ -103,7 +102,7 @@
       padding: 40px 20px 100px;
     }
 
-    /* Grille 3 par 3 */
+    /* Grille */
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -158,13 +157,6 @@
       object-fit: cover;
       border-radius: 10px;
     }
-    .photo-card .badge {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #444;
-    }
 
     /* Lightbox (Plein écran) */
     .lightbox {
@@ -184,64 +176,68 @@
       display: flex;
     }
     .lightbox img {
-      max-width: 95vw;
-      max-height: 95vh;
+      max-width: 90vw;
+      max-height: 90vh;
       border-radius: 10px;
       box-shadow: 0 0 40px rgba(0,0,0,0.6);
       object-fit: contain;
+      user-select: none;
     }
     .lightbox-close {
       position: absolute;
-      top: 15px;      right: 25px;
+      top: 15px;
+      right: 25px;
       color: white;
       font-size: 45px;
       font-weight: bold;
       cursor: pointer;
       user-select: none;
+      z-index: 1001;
+      transition: color 0.2s;
+    }
+    .lightbox-close:hover {
+      color: #f88585;
+    }
+    
+    /* Flèches de navigation de la Lightbox */
+    .lightbox-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 50px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      padding: 20px;
+      z-index: 1001;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .lightbox-arrow:hover {
+      color: #f88585;
+      transform: translateY(-50%) scale(1.1);
+    }
+    .lightbox-arrow.left {
+      left: 20px;
+    }
+    .lightbox-arrow.right {
+      right: 20px;
     }
 
-    /* ========================================== */
-    /* RESPONSIVE DESIGN                          */
-    /* ========================================== */
+    /* RESPONSIVE DESIGN */
     @media (max-width: 992px) {
-      .logo-container {
-        width: 100px;
-        top: 20px;
-        left: 20px;
-      }
-      .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 50px 20px;
-      }
-      header h1 {
-        font-size: 2.2rem;
-      }
+      .logo-container { width: 100px; top: 20px; left: 20px; }
+      .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 50px 20px; }
+      header h1 { font-size: 2.2rem; }
+      .lightbox-arrow { font-size: 40px; padding: 10px; }
     }
     @media (max-width: 650px) {
-      header {
-        flex-direction: column;
-        padding-top: 15px;
-      }
-      .logo-container {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 110px;
-        margin-bottom: 15px;
-      }
-      header h1 {
-        font-size: 1.8rem;
-      }
-      .photo-grid {
-        grid-template-columns: 1fr;
-        gap: 35px;
-      }
-      .photo-card img {
-        height: 220px;
-      }
-      .svg-path {
-        display: none;
-      }
+      header { flex-direction: column; padding-top: 15px; }
+      .logo-container { position: relative; top: 0; left: 0; width: 110px; margin-bottom: 15px; }
+      header h1 { font-size: 1.8rem; }
+      .photo-grid { grid-template-columns: 1fr; gap: 35px; }
+      .photo-card img { height: 220px; }
+      .svg-path { display: none; }
+      .lightbox-arrow { font-size: 30px; }
     }
   </style>
 </head>
@@ -263,71 +259,108 @@
       <path id="pathLine" d="" />
     </svg>
 
-    <!-- GRILLE DES PHOTOS -->
+    <!-- GRILLE DES PHOTOS avec ajout de decoding="async" pour la fluidité -->
     <div class="photo-grid">
-   
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/165.jpeg')"><img src="photo/165.jpeg" alt="Photo 165" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/166.jpeg')"><img src="photo/166.jpeg" alt="Photo 166" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/167.jpeg')"><img src="photo/167.jpeg" alt="Photo 167" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/168.jpeg')"><img src="photo/168.jpeg" alt="Photo 168" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/169.jpeg')"><img src="photo/169.jpeg" alt="Photo 169" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/170.jpeg')"><img src="photo/170.jpeg" alt="Photo 170" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/171.jpeg')"><img src="photo/171.jpeg" alt="Photo 171" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/172.jpeg')"><img src="photo/172.jpeg" alt="Photo 172" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/173.jpeg')"><img src="photo/173.jpeg" alt="Photo 173" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/174.jpeg')"><img src="photo/174.jpeg" alt="Photo 174" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/175.jpeg')"><img src="photo/175.jpeg" alt="Photo 175" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/176.jpeg')"><img src="photo/176.jpeg" alt="Photo 176" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/177.jpeg')"><img src="photo/177.jpeg" alt="Photo 177" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/178.jpeg')"><img src="photo/178.jpeg" alt="Photo 178" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/179.jpeg')"><img src="photo/179.jpeg" alt="Photo 179" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/180.jpeg')"><img src="photo/180.jpeg" alt="Photo 180" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/181.jpeg')"><img src="photo/181.jpeg" alt="Photo 181" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/182.jpeg')"><img src="photo/182.jpeg" alt="Photo 182" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/183.jpeg')"><img src="photo/183.jpeg" alt="Photo 183" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/184.jpeg')"><img src="photo/184.jpeg" alt="Photo 184" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/185.jpeg')"><img src="photo/185.jpeg" alt="Photo 185" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/186.jpeg')"><img src="photo/186.jpeg" alt="Photo 186" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/187.jpeg')"><img src="photo/187.jpeg" alt="Photo 187" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/188.jpeg')"><img src="photo/188.jpeg" alt="Photo 188" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/189.jpeg')"><img src="photo/189.jpeg" alt="Photo 189" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/190.jpeg')"><img src="photo/190.jpeg" alt="Photo 190" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/191.jpeg')"><img src="photo/191.jpeg" alt="Photo 191" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/192.jpeg')"><img src="photo/192.jpeg" alt="Photo 192" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/193.jpeg')"><img src="photo/193.jpeg" alt="Photo 193" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/194.jpeg')"><img src="photo/194.jpeg" alt="Photo 194" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/195.jpeg')"><img src="photo/195.jpeg" alt="Photo 195" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/196.jpeg')"><img src="photo/196.jpeg" alt="Photo 196" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/197.jpeg')"><img src="photo/197.jpeg" alt="Photo 197" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/198.jpeg')"><img src="photo/198.jpeg" alt="Photo 198" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/199.jpeg')"><img src="photo/199.jpeg" alt="Photo 199" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/200.jpeg')"><img src="photo/200.jpeg" alt="Photo 200" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/201.jpeg')"><img src="photo/201.jpeg" alt="Photo 201" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/202.jpeg')"><img src="photo/202.jpeg" alt="Photo 202" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/203.jpeg')"><img src="photo/203.jpeg" alt="Photo 203" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/204.jpeg')"><img src="photo/204.jpeg" alt="Photo 204" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/205.jpeg')"><img src="photo/205.jpeg" alt="Photo 205" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/206.jpeg')"><img src="photo/206.jpeg" alt="Photo 206" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/207.jpeg')"><img src="photo/207.jpeg" alt="Photo 207" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/208.jpeg')"><img src="photo/208.jpeg" alt="Photo 208" loading="lazy"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/209.jpeg')"><img src="photo/209.jpeg" alt="Photo 209" loading="lazy"></div></div>
-    </div> <!-- FIN DE LA GRILLE -->
+      <!-- (J'ai conservé tes cartes et ajouté decoding="async") -->
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/139.jpeg')"><img src="photo/139.jpeg" alt="Photo 139" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/140.jpeg')"><img src="photo/140.jpeg" alt="Photo 140" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/141.jpeg')"><img src="photo/141.jpeg" alt="Photo 141" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/142.jpeg')"><img src="photo/142.jpeg" alt="Photo 142" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/143.jpeg')"><img src="photo/143.jpeg" alt="Photo 143" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/144.jpeg')"><img src="photo/144.jpeg" alt="Photo 144" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/145.jpeg')"><img src="photo/145.jpeg" alt="Photo 145" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/146.jpeg')"><img src="photo/146.jpeg" alt="Photo 146" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/147.jpeg')"><img src="photo/147.jpeg" alt="Photo 147" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/148.jpeg')"><img src="photo/148.jpeg" alt="Photo 148" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/149.jpeg')"><img src="photo/149.jpeg" alt="Photo 149" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/150.jpeg')"><img src="photo/150.jpeg" alt="Photo 150" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/151.jpeg')"><img src="photo/151.jpeg" alt="Photo 151" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/152.jpeg')"><img src="photo/152.jpeg" alt="Photo 152" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/153.jpeg')"><img src="photo/153.jpeg" alt="Photo 153" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/154.jpeg')"><img src="photo/154.jpeg" alt="Photo 154" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/155.jpeg')"><img src="photo/155.jpeg" alt="Photo 155" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/156.jpeg')"><img src="photo/156.jpeg" alt="Photo 156" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/157.jpeg')"><img src="photo/157.jpeg" alt="Photo 157" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/158.jpeg')"><img src="photo/158.jpeg" alt="Photo 158" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/159.jpeg')"><img src="photo/159.jpeg" alt="Photo 159" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/160.jpeg')"><img src="photo/160.jpeg" alt="Photo 160" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/161.jpeg')"><img src="photo/161.jpeg" alt="Photo 161" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/162.jpeg')"><img src="photo/162.jpeg" alt="Photo 162" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/163.jpeg')"><img src="photo/163.jpeg" alt="Photo 163" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/164.jpeg')"><img src="photo/164.jpeg" alt="Photo 164" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/165.jpeg')"><img src="photo/165.jpeg" alt="Photo 165" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/166.jpeg')"><img src="photo/166.jpeg" alt="Photo 166" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/167.jpeg')"><img src="photo/167.jpeg" alt="Photo 167" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/168.jpeg')"><img src="photo/168.jpeg" alt="Photo 168" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/169.jpeg')"><img src="photo/169.jpeg" alt="Photo 169" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/170.jpeg')"><img src="photo/170.jpeg" alt="Photo 170" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/171.jpeg')"><img src="photo/171.jpeg" alt="Photo 171" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/172.jpeg')"><img src="photo/172.jpeg" alt="Photo 172" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/173.jpeg')"><img src="photo/173.jpeg" alt="Photo 173" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/174.jpeg')"><img src="photo/174.jpeg" alt="Photo 174" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/175.jpeg')"><img src="photo/175.jpeg" alt="Photo 175" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/176.jpeg')"><img src="photo/176.jpeg" alt="Photo 176" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/177.jpeg')"><img src="photo/177.jpeg" alt="Photo 177" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/178.jpeg')"><img src="photo/178.jpeg" alt="Photo 178" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/179.jpeg')"><img src="photo/179.jpeg" alt="Photo 179" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/180.jpeg')"><img src="photo/180.jpeg" alt="Photo 180" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/181.jpeg')"><img src="photo/181.jpeg" alt="Photo 181" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/182.jpeg')"><img src="photo/182.jpeg" alt="Photo 182" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/183.jpeg')"><img src="photo/183.jpeg" alt="Photo 183" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/184.jpeg')"><img src="photo/184.jpeg" alt="Photo 184" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/185.jpeg')"><img src="photo/185.jpeg" alt="Photo 185" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/186.jpeg')"><img src="photo/186.jpeg" alt="Photo 186" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/187.jpeg')"><img src="photo/187.jpeg" alt="Photo 187" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/188.jpeg')"><img src="photo/188.jpeg" alt="Photo 188" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/189.jpeg')"><img src="photo/189.jpeg" alt="Photo 189" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/190.jpeg')"><img src="photo/190.jpeg" alt="Photo 190" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/191.jpeg')"><img src="photo/191.jpeg" alt="Photo 191" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/192.jpeg')"><img src="photo/192.jpeg" alt="Photo 192" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/193.jpeg')"><img src="photo/193.jpeg" alt="Photo 193" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/194.jpeg')"><img src="photo/194.jpeg" alt="Photo 194" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/195.jpeg')"><img src="photo/195.jpeg" alt="Photo 195" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/196.jpeg')"><img src="photo/196.jpeg" alt="Photo 196" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/197.jpeg')"><img src="photo/197.jpeg" alt="Photo 197" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/198.jpeg')"><img src="photo/198.jpeg" alt="Photo 198" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/199.jpeg')"><img src="photo/199.jpeg" alt="Photo 199" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/200.jpeg')"><img src="photo/200.jpeg" alt="Photo 200" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/201.jpeg')"><img src="photo/201.jpeg" alt="Photo 201" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/202.jpeg')"><img src="photo/202.jpeg" alt="Photo 202" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/203.jpeg')"><img src="photo/203.jpeg" alt="Photo 203" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/204.jpeg')"><img src="photo/204.jpeg" alt="Photo 204" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/205.jpeg')"><img src="photo/205.jpeg" alt="Photo 205" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/206.jpeg')"><img src="photo/206.jpeg" alt="Photo 206" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/207.jpeg')"><img src="photo/207.jpeg" alt="Photo 207" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/208.jpeg')"><img src="photo/208.jpeg" alt="Photo 208" loading="lazy" decoding="async"></div></div>
+      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/209.jpeg')"><img src="photo/209.jpeg" alt="Photo 209" loading="lazy" decoding="async"></div></div>
+    </div>
   </div>
 
-  <!-- Lightbox -->
+  <!-- Lightbox avec les flèches -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close">&times;</span>
-    <img id="lightboxImg" src="" alt="Photo plein écran">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <span class="lightbox-arrow left" onclick="changeImage(-1, event)">&#10094;</span>
+    <img id="lightboxImg" src="" alt="Photo plein écran" onclick="event.stopPropagation()">
+    <span class="lightbox-arrow right" onclick="changeImage(1, event)">&#10095;</span>
   </div>
 
   <script>
+    // Stockage de toutes les images pour la navigation
+    let currentImageIndex = 0;
+    let imagesList = [];
+
+    // Récupération automatique de toutes les sources d'images au chargement
+    window.addEventListener('DOMContentLoaded', () => {
+      const images = document.querySelectorAll('.photo-card img');
+      imagesList = Array.from(images).map(img => img.getAttribute('src'));
+    });
+
     // Algorithme de tracé du chemin serpentin
     function drawPath() {
       const container = document.getElementById('pathContainer');
       const cards = document.querySelectorAll('.photo-card');
       const pathLine = document.getElementById('pathLine');
 
-      // Pas de pointillés si l'écran est trop petit (mobile)
       if (window.innerWidth <= 650 || cards.length < 2) {
         pathLine.setAttribute('d', "");
         return;
@@ -362,16 +395,49 @@
       pathLine.setAttribute('d', pathD);
     }
 
+    // Ouverture de la lightbox à l'image cliquée
     function openLightbox(src) {
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
+      
+      // Trouver l'index de l'image cliquée
+      currentImageIndex = imagesList.indexOf(src);
+      
       lightboxImg.src = src;
       lightbox.classList.add('active');
     }
 
+    // Fermeture de la lightbox
     function closeLightbox() {
       document.getElementById('lightbox').classList.remove('active');
     }
+
+    // Fonction pour changer d'image avec les flèches
+    function changeImage(direction, event) {
+      // Empêche le clic sur la flèche de fermer la lightbox (car le fond a un onclick)
+      if (event) event.stopPropagation();
+
+      currentImageIndex += direction;
+
+      // Boucle pour revenir à la première ou dernière image
+      if (currentImageIndex < 0) {
+        currentImageIndex = imagesList.length - 1;
+      } else if (currentImageIndex >= imagesList.length) {
+        currentImageIndex = 0;
+      }
+
+      document.getElementById('lightboxImg').src = imagesList[currentImageIndex];
+    }
+
+    // Gestion du clavier (Flèches gauche/droite et Echap)
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('lightbox');
+      if (lightbox.classList.contains('active')) {
+        if (e.key === 'ArrowLeft') changeImage(-1);
+        else if (e.key === 'ArrowRight') changeImage(1);
+        else if (e.key === 'Escape') closeLightbox();
+      }
+    });
 
     window.addEventListener('load', drawPath);
     window.addEventListener('resize', drawPath);
