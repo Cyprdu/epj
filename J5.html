@@ -1,11 +1,19 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camp EPJ 2026 - Jour 4</title>
+  <title>EN ATTENTE DES PHOTOS</title>
   <style>
-    /* Intégration de la police Apfel Grotezk */
+    @font-face {
+      font-family: 'NewTitle';
+      /* On remplace l'URL complète par le nom du fichier local */
+      src: url('NewTitle-Variable.woff2') format('woff2'); 
+      font-weight: 100 900;
+      font-style: normal;
+    }
+
     @font-face {
       font-family: 'Apfel Grotezk';
       src: url('ApfelGrotezk-Fett.woff2') format('woff2');
@@ -22,7 +30,6 @@
     body {
       min-height: 100vh;
       width: 100vw;
-      /* Dégradé Mesh pur CSS */
       background-color: #f67c87;
       background-image: 
         radial-gradient(at 0% 0%, #a2e2c4 0px, transparent 55%),
@@ -32,415 +39,98 @@
         radial-gradient(at 50% 50%, #f88585 0px, transparent 65%);
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      background-attachment: fixed;
       position: relative;
-      font-family: 'Apfel Grotezk', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow-x: hidden;
+      overflow: hidden;
+      /* Police par défaut pour la page (s'applique au h1) */
+      font-family: 'NewTitle', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffffff;
+      text-transform: uppercase; /* Sécurité supplémentaire pour forcer les majuscules en CSS */
     }
 
-    /* Calque de grain numérique */
+    /* Calque de texture / grain numérique */
     body::before {
       content: "";
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       opacity: 0.22;
       pointer-events: none;
-      z-index: 1;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
-
-    /* En-tête */
-    header {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px 20px 10px;
-      width: 100%;
-    }
-
-    /* Logo PaJe */
-    .logo-container {
-      position: absolute;
-      top: 25px;
-      left: 30px;
-      width: 130px; 
-      height: auto;
-      z-index: 3;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-    }
-    .logo-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .header-text {
-      text-align: center;
-      color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 5px;
-      font-weight: normal;
-    }
-    header p {
-      font-size: 1.2rem;
-      opacity: 0.95;
-    }
-
-    /* Conteneur principal */
-    .path-container {
-      position: relative;
-      z-index: 2;
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 40px 20px 100px;
-    }
-
-    /* Grille */
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 60px 30px;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* SVG pour la ligne en pointillés */
-    .svg-path {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
       z-index: 1;
     }
-    .svg-path path {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.9);
-      stroke-width: 5;
-      stroke-dasharray: 12, 12;
-      stroke-linecap: round;
-    }
 
-    /* Cartes Photos */
-    .photo-node {
+    .content {
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+      max-width: 800px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
     }
-    .photo-card {
-      background: rgba(255, 255, 255, 0.88);
-      padding: 14px 14px 22px 14px;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-      backdrop-filter: blur(5px);
-    }
-    .photo-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
-    }
-    .photo-card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 10px;
+
+    .logo {
+      max-width: 250px;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
 
-    /* Lightbox (Plein écran) */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.92);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(10px);
+    h1 {
+      font-size: 3.5rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      font-weight: 700;
     }
-    .lightbox.active {
-      display: flex;
+
+    p {
+      /* Application de la police Apfel Grotezk */
+      font-family: 'Apfel Grotezk', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 3rem;
+      opacity: 0.9;
     }
-    .lightbox img {
-      max-width: 90vw;
-      max-height: 90vh;
-      border-radius: 10px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
-      object-fit: contain;
-      user-select: none;
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 15px;
-      right: 25px;
-      color: white;
-      font-size: 45px;
+
+    .btn {
+      /* Application de la police Apfel Grotezk */
+      font-family: 'Apfel Grotezk', sans-serif;
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      font-size: 1.2rem;
+      color: #f16d82;
+      background: #ffffff;
+      text-decoration: none;
+      border-radius: 50px;
       font-weight: bold;
-      cursor: pointer;
-      user-select: none;
-      z-index: 1001;
-      transition: color 0.2s;
-    }
-    .lightbox-close:hover {
-      color: #f88585;
-    }
-    
-    /* Flèches de navigation de la Lightbox */
-    .lightbox-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 50px;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      padding: 20px;
-      z-index: 1001;
-      transition: color 0.3s, transform 0.3s;
-    }
-    .lightbox-arrow:hover {
-      color: #f88585;
-      transform: translateY(-50%) scale(1.1);
-    }
-    .lightbox-arrow.left {
-      left: 20px;
-    }
-    .lightbox-arrow.right {
-      right: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 992px) {
-      .logo-container { width: 100px; top: 20px; left: 20px; }
-      .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 50px 20px; }
-      header h1 { font-size: 2.2rem; }
-      .lightbox-arrow { font-size: 40px; padding: 10px; }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
-    @media (max-width: 650px) {
-      header { flex-direction: column; padding-top: 15px; }
-      .logo-container { position: relative; top: 0; left: 0; width: 110px; margin-bottom: 15px; }
-      header h1 { font-size: 1.8rem; }
-      .photo-grid { grid-template-columns: 1fr; gap: 35px; }
-      .photo-card img { height: 220px; }
-      .svg-path { display: none; }
-      .lightbox-arrow { font-size: 30px; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.5rem; }
+      p { font-size: 1.2rem; }
+      .logo { max-width: 200px; }
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="logo-container">
-      <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo PaJe">
-    </div>
-    <div class="header-text">
-      <h1>EPJ 2026 - Jour 4</h1>
-      <p></p>
-    </div>
-  </header>
-
-  <div class="path-container" id="pathContainer">
-    <!-- SVG tracé dynamiquement en serpentin -->
-    <svg class="svg-path" id="svgPath">
-      <path id="pathLine" d="" />
-    </svg>
-
-    <!-- GRILLE DES PHOTOS avec ajout de decoding="async" pour la fluidité -->
-    <div class="photo-grid">
-      <!-- (J'ai conservé tes cartes et ajouté decoding="async") -->
-
-<div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/210.jpeg')"><img src="photo/210.jpeg" alt="Photo 210" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/211.jpeg')"><img src="photo/211.jpeg" alt="Photo 211" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/212.jpeg')"><img src="photo/212.jpeg" alt="Photo 212" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/213.jpeg')"><img src="photo/213.jpeg" alt="Photo 213" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/214.jpeg')"><img src="photo/214.jpeg" alt="Photo 214" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/215.jpeg')"><img src="photo/215.jpeg" alt="Photo 215" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/216.jpeg')"><img src="photo/216.jpeg" alt="Photo 216" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/217.jpeg')"><img src="photo/217.jpeg" alt="Photo 217" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/218.jpeg')"><img src="photo/218.jpeg" alt="Photo 218" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/219.jpeg')"><img src="photo/219.jpeg" alt="Photo 219" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/220.jpeg')"><img src="photo/220.jpeg" alt="Photo 220" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/221.jpeg')"><img src="photo/221.jpeg" alt="Photo 221" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/222.jpeg')"><img src="photo/222.jpeg" alt="Photo 222" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/223.jpeg')"><img src="photo/223.jpeg" alt="Photo 223" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/224.jpeg')"><img src="photo/224.jpeg" alt="Photo 224" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/225.jpeg')"><img src="photo/225.jpeg" alt="Photo 225" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/226.jpeg')"><img src="photo/226.jpeg" alt="Photo 226" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/227.jpeg')"><img src="photo/227.jpeg" alt="Photo 227" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/228.jpeg')"><img src="photo/228.jpeg" alt="Photo 228" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/229.jpeg')"><img src="photo/229.jpeg" alt="Photo 229" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/230.jpeg')"><img src="photo/230.jpeg" alt="Photo 230" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/231.jpeg')"><img src="photo/231.jpeg" alt="Photo 231" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/232.jpeg')"><img src="photo/232.jpeg" alt="Photo 232" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/233.jpeg')"><img src="photo/233.jpeg" alt="Photo 233" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/234.jpeg')"><img src="photo/234.jpeg" alt="Photo 234" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/235.jpeg')"><img src="photo/235.jpeg" alt="Photo 235" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/236.jpeg')"><img src="photo/236.jpeg" alt="Photo 236" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/237.jpeg')"><img src="photo/237.jpeg" alt="Photo 237" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/238.jpeg')"><img src="photo/238.jpeg" alt="Photo 238" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/239.jpeg')"><img src="photo/239.jpeg" alt="Photo 239" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/240.jpeg')"><img src="photo/240.jpeg" alt="Photo 240" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/241.jpeg')"><img src="photo/241.jpeg" alt="Photo 241" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/242.jpeg')"><img src="photo/242.jpeg" alt="Photo 242" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/243.jpeg')"><img src="photo/243.jpeg" alt="Photo 243" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/244.jpeg')"><img src="photo/244.jpeg" alt="Photo 244" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/245.jpeg')"><img src="photo/245.jpeg" alt="Photo 245" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/246.jpeg')"><img src="photo/246.jpeg" alt="Photo 246" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/247.jpeg')"><img src="photo/247.jpeg" alt="Photo 247" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/248.jpeg')"><img src="photo/248.jpeg" alt="Photo 248" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/249.jpeg')"><img src="photo/249.jpeg" alt="Photo 249" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/250.jpeg')"><img src="photo/250.jpeg" alt="Photo 250" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/251.jpeg')"><img src="photo/251.jpeg" alt="Photo 251" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/252.jpeg')"><img src="photo/252.jpeg" alt="Photo 252" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/253.jpeg')"><img src="photo/253.jpeg" alt="Photo 253" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/254.jpeg')"><img src="photo/254.jpeg" alt="Photo 254" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/255.jpeg')"><img src="photo/255.jpeg" alt="Photo 255" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/256.jpeg')"><img src="photo/256.jpeg" alt="Photo 256" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/257.jpeg')"><img src="photo/257.jpeg" alt="Photo 257" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/258.jpeg')"><img src="photo/258.jpeg" alt="Photo 258" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/259.jpeg')"><img src="photo/259.jpeg" alt="Photo 259" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/260.jpeg')"><img src="photo/260.jpeg" alt="Photo 260" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/261.jpeg')"><img src="photo/261.jpeg" alt="Photo 261" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/262.jpeg')"><img src="photo/262.jpeg" alt="Photo 262" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/263.jpeg')"><img src="photo/263.jpeg" alt="Photo 263" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/264.jpeg')"><img src="photo/264.jpeg" alt="Photo 264" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/265.jpeg')"><img src="photo/265.jpeg" alt="Photo 265" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/266.jpeg')"><img src="photo/266.jpeg" alt="Photo 266" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/267.jpeg')"><img src="photo/267.jpeg" alt="Photo 267" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/268.jpeg')"><img src="photo/268.jpeg" alt="Photo 268" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/269.jpeg')"><img src="photo/269.jpeg" alt="Photo 269" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/270.jpeg')"><img src="photo/270.jpeg" alt="Photo 270" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/271.jpeg')"><img src="photo/271.jpeg" alt="Photo 271" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/272.jpeg')"><img src="photo/272.jpeg" alt="Photo 272" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/273.jpeg')"><img src="photo/273.jpeg" alt="Photo 273" loading="lazy" decoding="async"></div></div>
-      <div class="photo-node"><div class="photo-card" onclick="openLightbox('photo/274.jpeg')"><img src="photo/274.jpeg" alt="Photo 274" loading="lazy" decoding="async"></div></div>
-
-
-
-
-      
-    </div>
+  <div class="content">
+    <img src="https://github.com/Cyprdu/PaJe/blob/main/logo%20(1).png?raw=true" alt="Logo" class="logo">
+    <h1>LES PHOTOS DU JOUR 5 ARRIVENT D'ICI PEU...</h1>
+    <p>MERCI DE VOTRE PATIENCE...</p>
+    <a class='btn' href='/photos'>VOIR LES PHOTOS DES AUTRES JOURS</a>
   </div>
-
-  <!-- Lightbox avec les flèches -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-    <span class="lightbox-arrow left" onclick="changeImage(-1, event)">&#10094;</span>
-    <img id="lightboxImg" src="" alt="Photo plein écran" onclick="event.stopPropagation()">
-    <span class="lightbox-arrow right" onclick="changeImage(1, event)">&#10095;</span>
-  </div>
-
-  <script>
-    // Stockage de toutes les images pour la navigation
-    let currentImageIndex = 0;
-    let imagesList = [];
-
-    // Récupération automatique de toutes les sources d'images au chargement
-    window.addEventListener('DOMContentLoaded', () => {
-      const images = document.querySelectorAll('.photo-card img');
-      imagesList = Array.from(images).map(img => img.getAttribute('src'));
-    });
-
-    // Algorithme de tracé du chemin serpentin
-    function drawPath() {
-      const container = document.getElementById('pathContainer');
-      const cards = document.querySelectorAll('.photo-card');
-      const pathLine = document.getElementById('pathLine');
-
-      if (window.innerWidth <= 650 || cards.length < 2) {
-        pathLine.setAttribute('d', "");
-        return;
-      }
-
-      const containerRect = container.getBoundingClientRect();
-      let pathD = "";
-
-      cards.forEach((card, index) => {
-        const rect = card.getBoundingClientRect();
-        const x = rect.left + rect.width / 2 - containerRect.left;
-        const y = rect.top + rect.height / 2 - containerRect.top;
-
-        if (index === 0) {
-          pathD += `M ${x} ${y}`;
-        } else {
-          const prevRect = cards[index - 1].getBoundingClientRect();
-          const prevX = prevRect.left + prevRect.width / 2 - containerRect.left;
-          const prevY = prevRect.top + prevRect.height / 2 - containerRect.top;
-
-          const deltaY = Math.abs(y - prevY);
-
-          if (deltaY < 50) {
-            pathD += ` L ${x} ${y}`;
-          } else {
-            const controlY = prevY + (y - prevY) / 2;
-            pathD += ` C ${prevX} ${controlY}, ${x} ${controlY}, ${x} ${y}`;
-          }
-        }
-      });
-
-      pathLine.setAttribute('d', pathD);
-    }
-
-    // Ouverture de la lightbox à l'image cliquée
-    function openLightbox(src) {
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightboxImg');
-      
-      // Trouver l'index de l'image cliquée
-      currentImageIndex = imagesList.indexOf(src);
-      
-      lightboxImg.src = src;
-      lightbox.classList.add('active');
-    }
-
-    // Fermeture de la lightbox
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('active');
-    }
-
-    // Fonction pour changer d'image avec les flèches
-    function changeImage(direction, event) {
-      // Empêche le clic sur la flèche de fermer la lightbox (car le fond a un onclick)
-      if (event) event.stopPropagation();
-
-      currentImageIndex += direction;
-
-      // Boucle pour revenir à la première ou dernière image
-      if (currentImageIndex < 0) {
-        currentImageIndex = imagesList.length - 1;
-      } else if (currentImageIndex >= imagesList.length) {
-        currentImageIndex = 0;
-      }
-
-      document.getElementById('lightboxImg').src = imagesList[currentImageIndex];
-    }
-
-    // Gestion du clavier (Flèches gauche/droite et Echap)
-    document.addEventListener('keydown', (e) => {
-      const lightbox = document.getElementById('lightbox');
-      if (lightbox.classList.contains('active')) {
-        if (e.key === 'ArrowLeft') changeImage(-1);
-        else if (e.key === 'ArrowRight') changeImage(1);
-        else if (e.key === 'Escape') closeLightbox();
-      }
-    });
-
-    window.addEventListener('load', drawPath);
-    window.addEventListener('resize', drawPath);
-  </script>
 </body>
 </html>
