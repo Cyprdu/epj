@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopoFlix - Pastorale des Jeunes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hide-scroll-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .topo-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .topo-card:hover {
+            transform: scale(1.08);
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        }
+    </style>
+    <!-- Chargement de l'API YouTube -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body class="bg-[#141414] text-white font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 flex items-center justify-between px-6 py-4 bg-gradient-to-b from-black/90 to-transparent transition-colors duration-300">
+        <div class="flex items-center gap-8">
+            <h1 class="text-red-600 text-3xl font-bold tracking-tighter">TOPOFLIX</h1>
+            <div class="hidden md:flex gap-4 text-sm text-gray-300">
+                <a href="#" class="font-semibold text-white hover:text-gray-300 transition">Accueil</a>
+                <a href="#" class="hover:text-gray-300 transition">Vidéos</a>
+                <a href="#" class="hover:text-gray-300 transition">Audios</a>
+                <a href="#" class="hover:text-gray-300 transition">Documents</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative h-[70vh] w-full bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1501466044931-62695aada8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent"></div>
+        
+        <div class="absolute bottom-[20%] left-6 md:left-16 max-w-2xl">
+            <h2 class="text-5xl font-bold mb-4 drop-shadow-lg">L'Appel à l'Engagement</h2>
+            <p class="text-lg text-gray-200 mb-6 drop-shadow-md">Découvrez comment donner du sens à vos actions quotidiennes et vous engager pleinement dans vos projets et votre foi.</p>
+            <div class="flex gap-3">
+                <button class="bg-white text-black px-6 py-2 rounded font-bold flex items-center gap-2 hover:bg-gray-200 transition">
+                    <!-- SVG Play -->
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Lecture
+                </button>
+                <button class="bg-gray-500/70 text-white px-6 py-2 rounded font-bold flex items-center gap-2 hover:bg-gray-500/90 transition">
+                    <!-- SVG Info -->
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Plus d'infos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteneur principal -->
+    <main class="relative z-10 px-6 md:px-16 -mt-16 pb-20" id="main-content">
+        <!-- Rangées générées par JS -->
+    </main>
+
+    <!-- FENÊTRE MODALE -->
+    <div id="modal" class="fixed inset-0 z-[100] hidden bg-black/95 flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <!-- Bouton fermer -->
+        <button id="close-modal" class="absolute top-6 right-6 text-white hover:text-gray-400 p-2 z-50">
+            <!-- SVG Close -->
+            <svg class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <!-- Conteneur dynamique -->
+        <div id="modal-content" class="w-full max-w-5xl p-4">
+            <!-- Contenu injecté ici -->
+        </div>
+    </div>
+
+    <script>
+        // LE JSON : Modifié pour inclure le champ "type" ("youtube", "texte", "pdf", "audio")
+        const toposData = [
+            {
+                "id": "topo_1",
+                "categorie": "Nouveautés",
+                "type": "youtube",
+                "lien": "https://youtu.be/iPql3hsLbmQ",
+                "image": "https://i.ytimg.com/vi/iPql3hsLbmQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLALbVyn76Bny_J_L6WVKVJJ6ZAmGg"
+            },
+            {
+                "id": "topo_2",
+                "categorie": "Nouveautés",
+                "type": "audio",
+                "lien": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Exemple de MP3
+                "image": "https://images.unsplash.com/photo-1614149162883-504ce4d13909?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "id": "topo_3",
+                "categorie": "Les Sacrements",
+                "type": "pdf",
+                "lien": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", // Exemple PDF
+                "image": "https://images.unsplash.com/photo-1601142634808-38923eb7c560?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "id": "topo_4",
+                "categorie": "Vie Quotidienne",
+                "type": "texte",
+                "texte": "<h1>Prier au quotidien</h1><br>La prière n'a pas besoin de durer des heures. L'important est la régularité et la sincérité du cœur.",
+                "image": "https://images.unsplash.com/photo-1529070538774-1843cb3265df?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "id": "topo_5",
+                "categorie": "Les Sacrements",
+                "type": "youtube",
+                "lien": "https://youtube.com/watch?v=M7FIvfx5J10", // Autre exemple YT
+                "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        let ytPlayer = null;
+        let progressInterval = null;
+        let currentTopoId = null;
+
+        // Fonction pour extraire l'ID YouTube
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Ouvre la modale et gère le contenu selon le type
+        function openModal(topo) {
+            currentTopoId = topo.id;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+
+            // Récupérer la progression sauvegardée (en secondes)
+            const savedTime = localStorage.getItem(`progress_${topo.id}`) || 0;
+
+            if(topo.type === 'youtube') {
+                const videoId = getYouTubeId(topo.lien);
+                modalContent.innerHTML = `
+                    <div class="relative w-full overflow-hidden shadow-2xl" style="padding-top: 56.25%;">
+                        <div id="yt-player-container" class="absolute top-0 left-0 w-full h-full rounded-xl"></div>
+                    </div>
+                `;
+                
+                // Initialiser l'API YouTube Player
+                ytPlayer = new YT.Player('yt-player-container', {
+                    videoId: videoId,
+                    playerVars: { 
+                        'autoplay': 1, 
+                        'start': Math.floor(savedTime), // Reprend à la seconde sauvegardée
+                        'rel': 0 
+                    },
+                    events: {
+                        'onStateChange': (event) => {
+                            // Si la vidéo joue, on sauvegarde la progression chaque seconde
+                            if (event.data == YT.PlayerState.PLAYING) {
+                                progressInterval = setInterval(() => {
+                                    localStorage.setItem(`progress_${topo.id}`, ytPlayer.getCurrentTime());
+                                }, 1000);
+                            } else {
+                                clearInterval(progressInterval);
+                            }
+                        }
+                    }
+                });
+
+            } else if(topo.type === 'audio') {
+                modalContent.innerHTML = `
+                    <div class="bg-[#181818] p-10 rounded-xl max-w-xl mx-auto flex flex-col items-center shadow-2xl">
+                        <img src="${topo.image}" class="w-48 h-48 rounded-full mb-8 object-cover shadow-lg">
+                        <audio id="audio-player" controls class="w-full" autoplay>
+                            <source src="${topo.lien}" type="audio/mpeg">
+                            Votre navigateur ne supporte pas l'audio.
+                        </audio>
+                    </div>
+                `;
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.currentTime = savedTime; // Reprise au dernier point
+                
+                // Sauvegarde de la progression audio en direct
+                audioPlayer.addEventListener('timeupdate', () => {
+                    localStorage.setItem(`progress_${topo.id}`, audioPlayer.currentTime);
+                });
+
+            } else if(topo.type === 'pdf') {
+                modalContent.innerHTML = `
+                    <div class="w-full h-[85vh] bg-white rounded-xl overflow-hidden shadow-2xl relative">
+                        <iframe src="${topo.lien}" class="w-full h-full border-0"></iframe>
+                    </div>
+                `;
+
+            } else if(topo.type === 'texte') {
+                modalContent.innerHTML = `
+                    <div class="bg-[#181818] p-10 md:p-16 rounded-xl shadow-2xl max-w-4xl mx-auto overflow-y-auto max-h-[85vh]">
+                        <div class="text-lg text-gray-200 leading-relaxed space-y-6">
+                            ${topo.texte}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Fermeture et nettoyage
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modalContent.innerHTML = ''; 
+                
+                // Nettoyage YouTube
+                if (progressInterval) clearInterval(progressInterval);
+                if (ytPlayer && ytPlayer.destroy) {
+                    ytPlayer.destroy();
+                    ytPlayer = null;
+                }
+            }, 300);
+        }
+
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+
+        // GÉNÉRATION DES CARTES (Plus de texte, que l'image !)
+        const categories = [...new Set(toposData.map(topo => topo.categorie))];
+        const mainContent = document.getElementById('main-content');
+
+        categories.forEach(categorie => {
+            const toposDeLaCategorie = toposData.filter(topo => topo.categorie === categorie);
+            
+            const rowSection = document.createElement('div');
+            rowSection.className = 'mb-8 lg:mb-12';
+            
+            const rowTitle = document.createElement('h3');
+            rowTitle.className = 'text-xl font-bold mb-4 text-gray-200';
+            rowTitle.textContent = categorie;
+            rowSection.appendChild(rowTitle);
+
+            const carouselContainer = document.createElement('div');
+            carouselContainer.className = 'flex overflow-x-scroll hide-scroll-bar space-x-4 pb-4';
+
+            toposDeLaCategorie.forEach(topo => {
+                const card = document.createElement('div');
+                // Format paysage Netflix standard
+                card.className = 'topo-card flex-none w-[280px] h-[157px] relative rounded-md overflow-hidden cursor-pointer bg-gray-900';
+                
+                // L'image est désormais 100% visible, sans dégradé noir par dessus
+                card.innerHTML = `
+                    <img src="${topo.image}" alt="Topo" class="absolute inset-0 w-full h-full object-cover">
+                `;
+
+                card.addEventListener('click', () => openModal(topo));
+                carouselContainer.appendChild(card);
+            });
+
+            rowSection.appendChild(carouselContainer);
+            mainContent.appendChild(rowSection);
+        });
+    </script>
+</body>
+</html>
