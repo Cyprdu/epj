@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Relecture PaJe — Belley-Ars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0f14;
+    --ink-2:#171a22;
+    --ink-3:#20242f;
+    --line:#2b2f3a;
+    --paper:#f4efe4;
+    --paper-dim:#a9a49a;
+    --paper-faint:#6f7078;
+    --flame:#d7a13f;
+    --flame-soft:#3a3120;
+    --flame-glow:rgba(215,161,63,0.16);
+    --ember:#c1543f;
+    --ember-soft:#3a2420;
+    --ok:#7a9b76;
+    --radius:18px;
+    --serif: 'Fraunces', serif;
+    --sans: 'Work Sans', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--sans);
+    min-height:100vh;
+    min-height:100dvh;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--flame-glow);color:var(--paper);}
+
+  a{color:var(--flame);}
+
+  /* ambient candle-glow backdrop */
+  .scene{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(600px 500px at 18% 12%, var(--flame-glow), transparent 60%),
+      radial-gradient(700px 600px at 85% 88%, rgba(193,84,63,0.08), transparent 60%),
+      var(--ink);
+  }
+  .scene::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(244,239,228,0.035) 1px, transparent 1px);
+    background-size:3px 3px;
+    opacity:0.5;
+  }
+
+  #app{
+    position:relative; z-index:1;
+    min-height:100vh; min-height:100dvh;
+    display:flex; flex-direction:column;
+    align-items:center;
+    padding:28px 18px 90px;
+  }
+
+  .wizard{
+    width:100%;
+    max-width:560px;
+    display:flex; flex-direction:column;
+    min-height:calc(100vh - 118px);
+    min-height:calc(100dvh - 118px);
+  }
+
+  /* top bar: mark + progress */
+  .topbar{
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:34px;
+  }
+  .mark{
+    font-family:var(--serif); font-weight:500; font-style:italic;
+    font-size:20px; color:var(--paper); letter-spacing:0.2px;
+    flex-shrink:0;
+  }
+  .mark span{color:var(--flame); font-style:normal;}
+  .progress-track{
+    flex:1; height:2px; background:var(--line); border-radius:2px; overflow:hidden;
+    position:relative;
+  }
+  .progress-fill{
+    position:absolute; left:0; top:0; bottom:0;
+    width:0%;
+    background:linear-gradient(90deg, var(--flame-soft), var(--flame));
+    transition:width .5s ease;
+  }
+  .phase-label{
+    font-size:12px; color:var(--paper-faint); white-space:nowrap; flex-shrink:0;
+  }
+
+  /* card */
+  .card-wrap{ flex:1; display:flex; flex-direction:column; }
+  .card{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:34px 28px;
+    flex:1;
+    display:flex; flex-direction:column;
+    justify-content:center;
+    opacity:0; transform:translateY(10px);
+    transition:opacity .38s ease, transform .38s ease;
+  }
+  .card.in{ opacity:1; transform:translateY(0); }
+  .card.out{ opacity:0; transform:translateY(-8px); }
+
+  .eyebrow{ font-size:13px; color:var(--flame); margin:0 0 10px; font-weight:500; }
+  h1.step-title, h2.step-title{
+    font-family:var(--serif); font-weight:500; font-size:26px; line-height:1.28;
+    margin:0 0 8px; color:var(--paper);
+  }
+  .step-sub{ color:var(--paper-dim); font-size:15px; line-height:1.55; margin:0 0 22px; }
+  .step-sub em{ color:var(--paper); font-style:normal; }
+
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:13px; color:var(--paper-dim); margin-bottom:7px; }
+  input[type="text"], input[type="email"], textarea{
+    width:100%;
+    background:var(--ink-3);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:13px 14px;
+    color:var(--paper);
+    font-family:var(--sans);
+    font-size:15.5px;
+    line-height:1.5;
+    resize:vertical;
+  }
+  input::placeholder, textarea::placeholder{ color:#565b68; }
+  input:focus, textarea:focus{
+    outline:2px solid var(--flame); outline-offset:1px; border-color:var(--flame);
+  }
+  textarea{ min-height:100px; }
+
+  .checkline{
+    display:flex; align-items:flex-start; gap:10px;
+    padding:11px 0; cursor:pointer;
+    color:var(--paper-dim); font-size:14.5px; line-height:1.5;
+  }
+  .checkline input{ margin-top:3px; accent-color:var(--flame); width:17px; height:17px; flex-shrink:0; }
+
+  /* choice list (radio-like cards) */
+  .choices{ display:flex; flex-direction:column; gap:9px; }
+  .choice{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 15px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    cursor:pointer;
+    background:var(--ink-3);
+    transition:border-color .18s ease, background .18s ease;
+    font-size:15px; color:var(--paper-dim);
+  }
+  .choice:hover{ border-color:#454b5c; }
+  .choice.selected{ border-color:var(--flame); background:rgba(215,161,63,0.08); color:var(--paper); }
+  .choice .dot{
+    width:16px; height:16px; border-radius:50%; border:1.5px solid #565b68; flex-shrink:0;
+    position:relative;
+  }
+  .choice.selected .dot{ border-color:var(--flame); }
+  .choice.selected .dot::after{
+    content:""; position:absolute; inset:3px; border-radius:50%; background:var(--flame);
+  }
+  .choice.multi .dot{ border-radius:5px; }
+  .choice.multi.selected .dot::after{ border-radius:2px; }
+  .choice .txt{ flex:1; }
+
+  .scale{ display:flex; gap:8px; margin:6px 0 4px; }
+  .scale button{
+    flex:1; padding:12px 0; border-radius:10px; border:1px solid var(--line);
+    background:var(--ink-3); color:var(--paper-dim); font-family:var(--sans); font-size:15px; cursor:pointer;
+  }
+  .scale button.selected{ border-color:var(--flame); background:rgba(215,161,63,0.12); color:var(--paper); }
+  .scale-labels{ display:flex; justify-content:space-between; font-size:12px; color:var(--paper-faint); margin-bottom:18px; }
+
+  .inline-sub{ margin-top:14px; }
+
+  .info-box{
+    background:var(--ink-3); border:1px solid var(--line); border-radius:12px;
+    padding:16px 17px; font-size:14px; line-height:1.65; color:var(--paper-dim);
+  }
+  .info-box strong{ color:var(--paper); }
+
+  .protection-box{
+    border:1px solid rgba(193,84,63,0.4);
+    background:var(--ember-soft);
+    border-radius:14px;
+    padding:18px;
+  }
+  .protection-box .step-title{ color:var(--paper); }
+  .protection-box .emergency{
+    display:block; margin:14px 0 16px; padding:12px 14px;
+    background:rgba(0,0,0,0.18); border-radius:10px; font-size:14px; color:var(--paper);
+    border-left:3px solid var(--ember);
+  }
+  .protection-box .emergency a{ color:#f0a08f; font-weight:600; text-decoration:none; }
+  .protection-toggle{
+    display:flex; align-items:flex-start; gap:12px; cursor:pointer;
+    padding:14px; border-radius:10px; background:rgba(0,0,0,0.14);
+    border:1px solid var(--line);
+  }
+  .protection-toggle input{ margin-top:3px; width:18px; height:18px; accent-color:var(--ember); }
+  .protection-toggle span{ font-size:14.5px; line-height:1.55; color:var(--paper); }
+  .protection-detail{ margin-top:16px; }
+
+  .resume-banner{
+    border:1px solid var(--flame); background:rgba(215,161,63,0.08);
+    border-radius:14px; padding:16px 18px; margin-bottom:22px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .resume-banner p{ margin:0; font-size:14.5px; color:var(--paper); line-height:1.5; }
+  .resume-banner .btn-row{ display:flex; gap:10px; }
+
+  /* nav */
+  .nav{
+    display:flex; align-items:center; gap:10px; margin-top:20px;
+  }
+  button{ font-family:var(--sans); }
+  .btn{
+    border:none; border-radius:12px; padding:14px 18px; font-size:15px; font-weight:500;
+    cursor:pointer; transition:opacity .15s ease, transform .1s ease;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn-primary{ background:var(--flame); color:#1b1305; flex:1; }
+  .btn-primary:disabled{ opacity:0.35; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--paper-dim); border:1px solid var(--line); }
+  .btn-text{ background:transparent; color:var(--paper-faint); font-size:13.5px; padding:14px 10px; }
+  .btn-text:hover{ color:var(--paper-dim); }
+  .btn-danger{ background:var(--ember); color:#2a0e08; }
+
+  .final-summary{
+    font-size:14.5px; line-height:1.7; color:var(--paper-dim);
+  }
+  .final-summary h3{
+    font-family:var(--serif); font-weight:500; font-style:italic; font-size:17px;
+    color:var(--flame); margin:20px 0 6px;
+  }
+  .final-summary h3:first-child{ margin-top:0; }
+  .final-summary p{ margin:0 0 10px; color:var(--paper); }
+  .final-summary .qa{ margin-bottom:12px; }
+  .final-summary .q{ color:var(--paper-faint); font-size:13px; margin-bottom:2px; }
+
+  .thanks-icon{
+    width:44px; height:44px; border-radius:50%; background:var(--flame-glow);
+    display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+    color:var(--flame); font-size:20px;
+  }
+
+  .footer-note{
+    text-align:center; color:var(--paper-faint); font-size:12px; margin-top:22px; line-height:1.6;
+  }
+
+  @media (max-width:480px){
+    .card{ padding:26px 20px; }
+    h1.step-title, h2.step-title{ font-size:22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card, .progress-fill{ transition:none; }
+  }
+
+  :focus-visible{ outline:2px solid var(--flame); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<div class="scene"></div>
+
+<div id="app">
+  <div class="wizard">
+    <div class="topbar">
+      <div class="mark">Pa<span>Je</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="phase-label" id="phaseLabel"></div>
+    </div>
+    <div class="card-wrap">
+      <div class="card in" id="card"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   CONFIGURATION SPLITFORMS
+   ========================================================= */
+var SPLITFORMS_URL = "https://splitforms.com/api/submit";
+var SPLITFORMS_KEY = "42628da76cad4850af677aed53c957db";
+var STORAGE_KEY = "paje_relecture_v1";
+
+/* =========================================================
+   DONNÉES : ACTIVITÉS, POSTES, QUESTIONS
+   ========================================================= */
+
+function r(id,label,opts){
+  opts = opts || {};
+  return {id:id, label:label, staff:!!opts.staff, charism:!!opts.charism};
+}
+
+var ACTIVITIES = {
+
+  del: {
+    label: "Week-end Dieu est Là (DEL)",
+    roles: [
+      r('animateur','Animateur',{staff:true}),
+      r('directeur','Directeur / responsable',{staff:true}),
+      r('jeune','Jeune'),
+      r('pretre','Prêtre (célébrant / confesseur)',{staff:true}),
+      r('louange','Louange',{staff:true,charism:true}),
+      r('predicateur','Prédicateur',{staff:true,charism:true}),
+      r('priants','Priants (prière des frères)',{staff:true,charism:true}),
+      r('ecoutant','Écoutant (accompagnement individuel)',{staff:true,charism:true})
+    ],
+    generic: [
+      {title:"Vécu spirituel", qs:["Comment as-tu vécu les temps de prière et de louange du week-end ?"]},
+      {title:"Organisation", qs:["Qu'est-ce qui a bien fonctionné dans l'organisation (accueil, repas, rythme) ?","Qu'est-ce qu'on pourrait améliorer l'année prochaine ?"]},
+      {title:"Un souvenir", qs:["Un moment particulier qui t'a marqué ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {
+      ecoutant: {label:"Ton rôle d'écoutant", qs:["As-tu ressenti une charge émotionnelle particulière dans ce rôle ?","T'es-tu senti(e) soutenu(e) dans ce rôle ?"]},
+      predicateur: {label:"Ta prédication", qs:["Comment as-tu vécu ton temps de prédication ?","Qu'est-ce qui t'a semblé porter du fruit, ou au contraire moins bien fonctionner ?"]},
+      louange: {label:"La louange", qs:["Comment as-tu vécu l'expression de la foi pendant les temps de louange ?","T'es-tu senti(e) à l'aise, ou y a-t-il eu un moment de malaise ?"]},
+      priants: {label:"La prière des frères", qs:["Comment as-tu vécu l'expression de la foi pendant la prière des frères ?","T'es-tu senti(e) à l'aise, ou y a-t-il eu un moment de malaise ?"]}
+    },
+    extra: null
+  },
+
+  epj: {
+    label: "Camp École de Prière (EPJ)",
+    roles: [
+      r('direction','Direction (directeur/trice, aumônier, berger)',{staff:true}),
+      r('animateur','Animateur',{staff:true}),
+      r('louange','Louange',{staff:true,charism:true}),
+      r('ecoute','Écoute spirituelle / prière des frères',{staff:true,charism:true}),
+      r('cuisine','Cuisine',{staff:true}),
+      r('menage','Ménage / plonge',{staff:true}),
+      r('fraternite','Fraternité de service',{staff:true}),
+      r('infirmerie','Infirmerie',{staff:true}),
+      r('secretariat','Secrétariat',{staff:true}),
+      r('commInterne','Communication interne',{staff:true}),
+      r('commExterne','Communication externe (photo/site)',{staff:true}),
+      r('parent','Parent (accueil, rangement)')
+    ],
+    generic: [
+      {title:"Vécu spirituel et veillées", qs:["Qu'est-ce qui a bien fonctionné dans les temps spirituels (veillées, adoration, confessions, procession, lectio divina, offices) ?","Qu'est-ce qu'on devrait améliorer ?","Un moment particulier à signaler ?"]},
+      {title:"Vie quotidienne et organisation", qs:["Qu'est-ce qui a bien fonctionné dans l'organisation quotidienne (repas, rythme, logistique, hébergement) ?","Qu'est-ce qu'on devrait améliorer ?"]},
+      {title:"Vie d'équipe et encadrement", qs:["Qu'est-ce qui a bien fonctionné dans la vie d'équipe et le lien avec la direction ?","Qu'est-ce qu'on devrait améliorer ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {
+      ecoute: {label:"L'écoute spirituelle", qs:["As-tu ressenti une charge émotionnelle particulière dans ce rôle ?","T'es-tu senti(e) soutenu(e) dans ce rôle ?"]},
+      louange: {label:"La louange", qs:["Comment as-tu vécu l'expression de la foi (danses, mains levées, paroles reçues) : à l'aise, ou avec un malaise à un moment ?","As-tu observé un malaise chez d'autres personnes ?","Le matériel et le son t'ont-ils semblé adaptés ?"]},
+      infirmerie: {label:"L'infirmerie", qs:["As-tu eu les moyens suffisants pour gérer les situations rencontrées ?","Y a-t-il un cas qui aurait nécessité plus d'anticipation ?"]},
+      cuisine: {label:"Service (cuisine)", qs:["La charge de travail t'a-t-elle semblé proportionnée ?","Le matériel et l'organisation t'ont-ils semblé suffisants ?"]},
+      menage: {label:"Service (ménage / plonge)", qs:["La charge de travail t'a-t-elle semblé proportionnée ?","Le matériel et l'organisation t'ont-ils semblé suffisants ?"]},
+      fraternite: {label:"Fraternité de service", qs:["La charge de travail t'a-t-elle semblé proportionnée ?","Le matériel et l'organisation t'ont-ils semblé suffisants ?"]},
+      secretariat: {label:"Le secrétariat", qs:["Les inscriptions en amont se sont-elles bien déroulées ?","Qu'y aurait-il à améliorer ?"]},
+      commInterne: {label:"Communication interne", qs:["Les outils utilisés pour coordonner l'équipe t'ont-ils semblé efficaces ?"]},
+      commExterne: {label:"Communication externe", qs:["As-tu pu respecter facilement les consignes (accès restreint aux photos, contenu du site) ?"]},
+      animateur: {label:"La vie de ton groupe de jeunes", qs:["Comment as-tu vécu la vie quotidienne avec ton groupe (repas, douches, coucher, lever) ?","Le rythme et l'hygiène de vie t'ont-ils semblé adaptés à l'âge du groupe ?"]},
+      direction: {label:"Le pilotage", qs:["Comment as-tu vécu le pilotage global du camp ?","La communication descendante t'a-t-elle semblé claire ?","Y a-t-il une décision difficile que tu as dû partager à l'équipe ?"]}
+    },
+    extra: null
+  },
+
+  vtt: {
+    label: "Camp pélé VTT",
+    roles: [
+      r('ggg','GGG (le prêtre, responsable devant l\'Église)',{staff:true}),
+      r('ogm','OGM (titulaire du BAFD, responsable devant la loi)',{staff:true}),
+      r('gg','GG (responsable technique du camp)',{staff:true}),
+      r('animateur','Animateur (18-25 ans)',{staff:true}),
+      r('staffLyceen','Staff (lycéen)',{staff:true}),
+      r('pedalant','Pédalant (collégien)'),
+      r('abs','ABS (abbés, sœurs, séminaristes)',{staff:true,charism:true}),
+      r('ttv','TTV (équipe logistique)',{staff:true}),
+      r('adulteSpi','Adulte spi (par équipe)',{staff:true,charism:true}),
+      r('mecanique','Équipe mécanique',{staff:true}),
+      r('cuisineVtt','Équipe cuisine',{staff:true})
+    ],
+    generic: [
+      {title:"Le rythme du camp", qs:["Comment as-tu vécu le rythme entre vélo, vie d'équipe, temps spirituels et fête ?"]},
+      {title:"Organisation", qs:["Qu'est-ce qui a bien fonctionné dans l'organisation (étapes, logistique, mécanique, repas) ?","Qu'est-ce qu'on pourrait améliorer ?"]},
+      {title:"Un souvenir", qs:["Un moment marquant à partager ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {},
+    extra: {label:"Sécurité vélo", q:"As-tu un point de vigilance à signaler sur la sécurité vélo (route, mécanique, incidents) ?"}
+  },
+
+  lourdes: {
+    label: "Camp à Lourdes",
+    roles: [
+      r('directeurSejour','Directeur du séjour',{staff:true}),
+      r('directeurAdjoint','Directeur/trice adjoint(e), responsable 15-17 ans',{staff:true}),
+      r('animateur1114','Animateur 11-14 ans',{staff:true}),
+      r('animateur1517','Animateur 15-17 ans (service / hospitalité)',{staff:true}),
+      r('sanitaire','Assistant sanitaire / infirmerie',{staff:true}),
+      r('jeune1114','Jeune participant 11-14 ans'),
+      r('jeune1517','Jeune participant 15-17 ans')
+    ],
+    generic: [
+      {title:"Le pèlerinage", qs:["Comment as-tu vécu ce pèlerinage (temps spirituels, célébrations, ambiance) ?"]},
+      {title:"Organisation", qs:["Qu'est-ce qui a bien fonctionné dans l'organisation (logement sous tente, repas, déplacements) ?","Qu'est-ce qu'on pourrait améliorer ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {
+      animateur1517: {label:"Le service auprès des malades", qs:["Comment as-tu vécu ce temps de service auprès des personnes malades ou vulnérables ?","Qu'est-ce que cette proximité t'a appris ?","As-tu rencontré une difficulté particulière (émotionnelle, physique) dans ce service ?"]},
+      jeune1517: {label:"Le service auprès des malades", qs:["Comment as-tu vécu ce temps de service auprès des personnes malades ou vulnérables ?","Qu'est-ce que cette proximité t'a appris ?","As-tu rencontré une difficulté particulière (émotionnelle, physique) dans ce service ?"]}
+    },
+    extra: {label:"Grands rassemblements", q:"As-tu un point de vigilance à signaler lié à la gestion des grands rassemblements (malaise, déshydratation, risque de se perdre dans la foule) ?"}
+  },
+
+  j1012: {
+    label: "Journée 10-12",
+    roles: [
+      r('louangeAdoration','Louange / animation de l\'adoration',{staff:true,charism:true}),
+      r('technique','Technique',{staff:true}),
+      r('accueil','Accueil',{staff:true}),
+      r('grandJeu','Animateur de grand jeu',{staff:true}),
+      r('temoignage','Témoignage',{staff:true}),
+      r('intervenantTopo','Intervenant (topo / enseignement)',{staff:true}),
+      r('accompagnementConfession','Accompagnement vers la confession',{staff:true}),
+      r('confesseur','Confesseur (prêtre)',{staff:true,charism:true}),
+      r('fraterniteRef','Animateur de fraternité / référent groupe',{staff:true}),
+      r('coordination','Coordination générale',{staff:true})
+    ],
+    generic: [
+      {title:"La journée", qs:["Comment as-tu vécu cette journée ?"]},
+      {title:"Organisation", qs:["Qu'est-ce qui a bien fonctionné dans l'organisation ?","Qu'est-ce qu'on pourrait améliorer pour la prochaine édition ?"]},
+      {title:"Un souvenir", qs:["Un moment marquant à partager ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {},
+    extra: null
+  },
+
+  oraison: {
+    label: "Week-end oraison / effusion",
+    roles: [
+      r('participant','Participant'),
+      r('animateur','Animateur',{staff:true}),
+      r('pretre','Prêtre (célébrant / confesseur)',{staff:true}),
+      r('louange','Louange',{staff:true,charism:true}),
+      r('priants','Priants',{staff:true,charism:true}),
+      r('ecoutant','Écoutant',{staff:true,charism:true}),
+      r('effusionAccompagnement','Équipe d\'accompagnement de l\'effusion',{staff:true,charism:true})
+    ],
+    generic: [
+      {title:"L'oraison", qs:["Comment as-tu vécu les temps de prière silencieuse / oraison ?","Qu'est-ce qui t'a aidé à entrer dans la prière ? Qu'est-ce qui t'en a éloigné ?"]},
+      {title:"L'effusion", qs:["As-tu vécu quelque chose de particulier pendant l'effusion, si tu y as participé ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {
+      effusionAccompagnement: {label:"L'accompagnement de l'effusion", qs:["As-tu ressenti une charge émotionnelle particulière dans ce rôle ?","T'es-tu senti(e) soutenu(e) dans ce rôle ?"]}
+    },
+    extra: null
+  },
+
+  formation: {
+    label: "Week-end formation des animateurs",
+    roles: [
+      r('animateurFormation','Animateur en formation',{staff:true}),
+      r('formateur','Formateur / intervenant',{staff:true}),
+      r('coordination','Coordination / organisation',{staff:true})
+    ],
+    generic: [
+      {title:"Le contenu", qs:["Le contenu t'a-t-il semblé utile et adapté à ton rôle ?","Qu'as-tu appris de concret que tu pourras réutiliser sur le terrain ?","Un sujet aurait-il mérité d'être approfondi ou ajouté ?"]},
+      {title:"L'équilibre du week-end", qs:["L'équilibre entre théorie, mise en situation et temps spirituel était-il le bon ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {},
+    extra: null
+  },
+
+  paray: {
+    label: "Week-end Paray (adultes)",
+    roles: [
+      r('participantCouple','Participant (couple)'),
+      r('participantIndividuel','Participant (individuel)'),
+      r('animateurOrganisateur','Animateur / organisateur',{staff:true}),
+      r('pretre','Prêtre',{staff:true}),
+      r('louange','Louange',{staff:true,charism:true}),
+      r('priants','Priants',{staff:true,charism:true}),
+      r('ecoutant','Écoutant',{staff:true,charism:true}),
+      r('predicateur','Prédicateur',{staff:true,charism:true})
+    ],
+    generic: [
+      {title:"Ce week-end", qs:["Comment as-tu vécu ce week-end, seul(e) ou en couple ?","Qu'est-ce que ça a nourri ou fait bouger dans ta vie spirituelle (ou ton couple, si présent en couple) ?","Qu'est-ce qui a été porteur ? Qu'est-ce qui a manqué ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {},
+    extra: null
+  },
+
+  autre: {
+    label: "Autre activité",
+    freeRole: true,
+    roles: [],
+    generic: [
+      {title:"Ton expérience", qs:["Qu'est-ce que tu as vécu, appris ou aimé pendant cette activité ?","Qu'est-ce qu'on pourrait améliorer pour la prochaine édition ?"]}
+    ],
+    genericLight: ["Qu'est-ce qui a bien fonctionné, vu de l'extérieur ?","Qu'est-ce qui pourrait être amélioré ?"],
+    modules: {},
+    extra: null
+  }
+};
+
+var ACTIVITY_ORDER = ['del','epj','vtt','lourdes','j1012','oraison','formation','paray','autre'];
+
+/* =========================================================
+   ÉTAT
+   ========================================================= */
+
+var state = {
+  name:"", email:"", anonymous:false,
+  activity:"", activityOther:"",
+  edition:"",
+  presence:"", ponctuelContext:"",
+  roles:[], roleOther:"",
+  answers:{},        // qKey -> texte
+  scale:null,        // rythme/charge 1-5
+  reprendreRole:null,
+  security:"", communication:"", charism:"", remarks:"",
+  reportFlag:false, reportDetail:""
+};
+
+var screens = [];      // liste ordonnée d'écrans dynamiques (après les écrans fixes)
+var idx = 0;           // index global dans FIXED + screens
+var submitted = false;
+
+/* =========================================================
+   ÉCRANS FIXES (toujours dans le même ordre)
+   ========================================================= */
+
+var FIXED_IDS = ["intro","ident","activity","edition","presence"];
+
+function currentActivity(){ return ACTIVITIES[state.activity]; }
+
+/* construit les écrans dynamiques une fois l'activité / présence / postes connus */
+function buildDynamicScreens(){
+  var act = currentActivity();
+  var out = [];
+  var complet = state.presence === "complet";
+
+  if(!complet){
+    out.push({id:"ponctContext", type:"text", title:"Ton intervention", sub:"Dis-nous en quelques mots dans quel cadre tu es intervenu(e).", key:"ponctuelContext", placeholder:"Ex. : confession, intervention ponctuelle, visite…"});
+    out.push({id:"genericLight", type:"group", title:"Ton regard", sub:"Vu de l'extérieur, en toute franchise.", qs:act.genericLight.map(function(q,i){return {key:"gl_"+i, q:q};}) });
+  } else {
+    out.push({id:"postes", type:"roles"});
+    // groupes de questions génériques
+    act.generic.forEach(function(g,gi){
+      out.push({id:"generic_"+gi, type:"group", title:g.title, qs:g.qs.map(function(q,i){return {key:"g_"+gi+"_"+i, q:q};}) });
+    });
+    // échelle rythme/charge si un poste d'encadrement est sélectionné
+    out.push({id:"scale", type:"scale", condition:function(){ return hasStaffRole(); } });
+    // mini-modules par poste sélectionné
+    Object.keys(act.modules || {}).forEach(function(roleId){
+      out.push({id:"module_"+roleId, type:"group", roleId:roleId,
+        title: act.modules[roleId].label,
+        qs: act.modules[roleId].qs.map(function(q,i){return {key:"m_"+roleId+"_"+i, q:q};}),
+        condition:function(){ return state.roles.indexOf(roleId) !== -1; }
+      });
+    });
+  }
+
+  // transversales — toujours posées
+  out.push({id:"security", type:"single", key:"security", title:"Point de vigilance", sub:"Sur le déroulement, l'organisation ou la sécurité.", q:"As-tu un point de vigilance à signaler sur le déroulement, l'organisation, ou la sécurité ?"});
+  out.push({id:"communication", type:"single", key:"communication", title:"Communication", q:"Comment as-tu trouvé la clarté des informations reçues et la qualité de la coordination ?"});
+
+  if(complet){
+    out.push({id:"charism", type:"single", key:"charism", title:"Vie spirituelle vécue en équipe",
+      sub:"Paroles reçues ou données, vécu de la louange, mouvement de l'Esprit — ce que tu veux en dire.",
+      q:"Comment as-tu vécu cette dimension (louange, paroles, prière) ? À l'aise, avec un malaise, quelque chose à en dire ?",
+      condition:function(){ return hasCharismRole(); }
+    });
+  }
+
+  out.push({id:"remarks", type:"single", key:"remarks", title:"Autres remarques", q:"Y a-t-il autre chose que tu souhaites partager ?", optional:true});
+
+  if(complet){
+    out.push({id:"reprendreRole", type:"choice2", key:"reprendreRole", title:"Et l'année prochaine ?", q:"As-tu envie de reprendre ce rôle l'année prochaine ?", options:["Oui","Peut-être","Non"],
+      condition:function(){ return hasStaffRole(); }
+    });
+  }
+
+  if(act.extra){
+    out.push({id:"extra", type:"single", key:"extraTransversal", title:act.extra.label, q:act.extra.q});
+  }
+
+  out.push({id:"protection", type:"protection"});
+  out.push({id:"final", type:"final"});
+
+  return out;
+}
+
+function hasStaffRole(){
+  var act = currentActivity();
+  if(!act || act.freeRole) return state.roleOther.trim().length>0;
+  return state.roles.some(function(id){
+    var role = act.roles.filter(function(rr){return rr.id===id;})[0];
+    return role && role.staff;
+  });
+}
+function hasCharismRole(){
+  var act = currentActivity();
+  if(!act || act.freeRole) return false;
+  return state.roles.some(function(id){
+    var role = act.roles.filter(function(rr){return rr.id===id;})[0];
+    return role && role.charism;
+  });
+}
+
+/* =========================================================
+   RENDU
+   ========================================================= */
+
+var cardEl = document.getElementById('card');
+var progressFill = document.getElementById('progressFill');
+var phaseLabel = document.getElementById('phaseLabel');
+
+function totalCount(){ return FIXED_IDS.length + screens.length; }
+
+function updateProgress(){
+  var total = Math.max(totalCount(), 1);
+  var pct = Math.min(100, Math.round((idx/total)*100));
+  progressFill.style.width = pct + "%";
+  var phases = ["Bienvenue","À propos de toi","Ton activité","Ton édition","Ta présence"];
+  var label = idx < FIXED_IDS.length ? phases[idx] : "Étape " + (idx-FIXED_IDS.length+1) + " / " + screens.length;
+  phaseLabel.textContent = label;
+}
+
+function currentId(){
+  return idx < FIXED_IDS.length ? FIXED_IDS[idx] : (screens[idx-FIXED_IDS.length] || {}).id;
+}
+
+function renderCard(html, focusSelector){
+  cardEl.classList.remove('in'); cardEl.classList.add('out');
+  setTimeout(function(){
+    cardEl.innerHTML = html;
+    cardEl.classList.remove('out'); cardEl.classList.add('in');
+    if(focusSelector){
+      var el = cardEl.querySelector(focusSelector);
+      if(el) setTimeout(function(){ el.focus(); }, 60);
+    }
+  }, 180);
+}
+
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({state:state, idx:idx, ts:Date.now()}));
+  }catch(e){}
+}
+function clearProgress(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+function loadProgress(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+
+function goTo(newIdx){
+  idx = newIdx;
+  if(idx > 1) saveProgress(); // on ne sauvegarde qu'à partir du moment où il y a un minimum de contexte
+  render();
+}
+function next(){
+  // recalcul des écrans dynamiques juste après l'étape "présence" (et après "postes" si complet, pour tenir compte des postes cochés)
+  if(currentId()==="presence"){ screens = buildDynamicScreens(); }
+  if(currentId()==="postes"){ screens = buildDynamicScreens.call(null); rebuildAfterPostes(); }
+  goTo(idx+1);
+}
+function prev(){ if(idx>0) goTo(idx-1); }
+
+function rebuildAfterPostes(){
+  // reconstruit les écrans dynamiques en conservant l'ordre, maintenant que les postes sont connus
+  var act = currentActivity();
+  var d = buildDynamicScreens();
+  screens = d;
+}
+
+/* petit utilitaire d'échappement */
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* =========================================================
+   ÉCRANS FIXES — RENDU
+   ========================================================= */
+
+function renderIntro(){
+  var saved = loadProgress();
+  var banner = "";
+  if(saved && saved.idx > 1 && !submitted){
+    var actLbl = (ACTIVITIES[saved.state.activity]||{}).label || "ton activité";
+    banner = '<div class="resume-banner">' +
+      '<p>Tu avais commencé une relecture pour <strong>'+esc(actLbl)+'</strong>. Tu veux reprendre où tu en étais ?</p>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="btnResume" style="flex:1">Reprendre là où j\'étais</button>' +
+        '<button class="btn btn-ghost" id="btnRestart">Recommencer</button>' +
+      '</div></div>';
+  }
+  var html =
+    banner +
+    '<p class="eyebrow">Relecture d\'activité</p>' +
+    '<h1 class="step-title">Merci de prendre ce temps.</h1>' +
+    '<p class="step-sub">Ce formulaire recueille ton retour pour aider l\'équipe à améliorer les prochaines éditions. Tes réponses sont lues par l\'équipe de direction de la PaJe et ne sont pas partagées en dehors.</p>' +
+    '<div class="info-box">Tu peux choisir de rester anonyme, sauf si tu signales une situation de sécurité concernant un mineur — auquel cas ton identité est nécessaire pour permettre un suivi. Les données sont conservées le temps nécessaire à l\'amélioration des activités. Pour les mineurs, ce formulaire est rempli dans le cadre normal de la relecture d\'activité, avec la même vigilance que pour toute donnée concernant un enfant.</div>' +
+    '<div class="nav">' +
+      '<button class="btn btn-primary" id="btnStart" style="width:100%">Commencer</button>' +
+    '</div>';
+  renderCard(html);
+  updateProgress();
+  var b1=document.getElementById('btnResume'), b2=document.getElementById('btnRestart'), b3=document.getElementById('btnStart');
+  if(b1) b1.onclick=function(){
+    var s = loadProgress();
+    state = s.state; idx = s.idx;
+    screens = buildDynamicScreensIfPossible();
+    render();
+  };
+  if(b2) b2.onclick=function(){ clearProgress(); state = freshState(); idx=1; render(); };
+  if(b3) b3.onclick=function(){ next(); };
+}
+
+function buildDynamicScreensIfPossible(){
+  if(state.presence) return buildDynamicScreens();
+  return [];
+}
+
+function freshState(){
+  return {
+    name:"", email:"", anonymous:false,
+    activity:"", activityOther:"",
+    edition:"",
+    presence:"", ponctuelContext:"",
+    roles:[], roleOther:"",
+    answers:{}, scale:null, reprendreRole:null,
+    security:"", communication:"", charism:"", remarks:"",
+    reportFlag:false, reportDetail:""
+  };
+}
+
+function renderIdent(){
+  var html =
+    '<p class="eyebrow">Étape 1</p>' +
+    '<h2 class="step-title">Qui es-tu ?</h2>' +
+    '<div class="field"><label>Ton prénom (ou nom)</label>' +
+      '<input type="text" id="fName" placeholder="Ton prénom" value="'+esc(state.name)+'"></div>' +
+    '<div class="field"><label>Ton e-mail (facultatif)</label>' +
+      '<input type="email" id="fEmail" placeholder="ton@email.fr" value="'+esc(state.email)+'"></div>' +
+    '<label class="checkline"><input type="checkbox" id="fAnon" '+(state.anonymous?'checked':'')+'> Je préfère rester anonyme pour la synthèse transversale</label>' +
+    navHtml(true, !!state.name.trim());
+  renderCard(html, '#fName');
+  updateProgress();
+  bindNav(function(){
+    state.name = val('fName'); state.email = val('fEmail'); state.anonymous = document.getElementById('fAnon').checked;
+    if(!state.name.trim()){ shake(); return; }
+    next();
+  });
+}
+
+function renderActivityStep(){
+  var html = '<p class="eyebrow">Étape 2</p><h2 class="step-title">Quelle activité ?</h2><div class="choices" id="actChoices">';
+  ACTIVITY_ORDER.forEach(function(key){
+    var sel = state.activity===key ? ' selected' : '';
+    html += '<div class="choice'+sel+'" data-key="'+key+'"><span class="dot"></span><span class="txt">'+esc(ACTIVITIES[key].label)+'</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="inline-sub" id="otherWrap" style="'+(state.activity==='autre'?'':'display:none')+'"><div class="field"><label>Nom de l\'activité</label><input type="text" id="fOther" placeholder="Nom de l\'activité" value="'+esc(state.activityOther)+'"></div></div>';
+  html += navHtml(true, canNextActivity());
+  renderCard(html);
+  updateProgress();
+  cardEl.querySelectorAll('.choice').forEach(function(el){
+    el.onclick=function(){
+      state.activity = el.getAttribute('data-key');
+      cardEl.querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
+      el.classList.add('selected');
+      document.getElementById('otherWrap').style.display = state.activity==='autre' ? '' : 'none';
+      refreshNextEnabled(canNextActivity());
+    };
+  });
+  var oth = document.getElementById('fOther');
+  if(oth) oth.oninput=function(){ state.activityOther = oth.value; refreshNextEnabled(canNextActivity()); };
+  bindNav(function(){ if(!canNextActivity()) return shake(); next(); });
+}
+function canNextActivity(){
+  if(!state.activity) return false;
+  if(state.activity==='autre') return state.activityOther.trim().length>0;
+  return true;
+}
+
+function renderEditionStep(){
+  var act = currentActivity();
+  var suggestion = act ? act.label + " " + new Date().getFullYear() : "";
+  var html =
+    '<p class="eyebrow">Étape 3</p>' +
+    '<h2 class="step-title">Quelle édition ?</h2>' +
+    '<p class="step-sub">Précise l\'édition ou l\'année, pour qu\'on distingue les différentes éditions dans l\'analyse (ex. « <em>'+esc(suggestion)+'</em> »).</p>' +
+    '<div class="field"><input type="text" id="fEdition" placeholder="'+esc(suggestion)+'" value="'+esc(state.edition)+'"></div>' +
+    navHtml(true, state.edition.trim().length>0);
+  renderCard(html, '#fEdition');
+  updateProgress();
+  document.getElementById('fEdition').oninput=function(){ state.edition=this.value; refreshNextEnabled(state.edition.trim().length>0); };
+  bindNav(function(){ if(!state.edition.trim()) return shake(); next(); });
+}
+
+function renderPresenceStep(){
+  var html =
+    '<p class="eyebrow">Étape 4</p>' +
+    '<h2 class="step-title">Ta présence</h2>' +
+    '<div class="choices">' +
+      choiceDiv('complet', "J'étais présent(e) sur toute la durée", state.presence==='complet') +
+      choiceDiv('ponctuel', "Je suis venu(e) ponctuellement (ex. : confession, intervention, visite)", state.presence==='ponctuel') +
+    '</div>' +
+    navHtml(true, !!state.presence);
+  renderCard(html);
+  updateProgress();
+  cardEl.querySelectorAll('.choice').forEach(function(el){
+    el.onclick=function(){
+      state.presence = el.getAttribute('data-key');
+      cardEl.querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
+      el.classList.add('selected');
+      refreshNextEnabled(true);
+    };
+  });
+  bindNav(function(){ if(!state.presence) return shake(); next(); });
+}
+
+function choiceDiv(key,label,selected){
+  return '<div class="choice'+(selected?' selected':'')+'" data-key="'+key+'"><span class="dot"></span><span class="txt">'+esc(label)+'</span></div>';
+}
+
+/* =========================================================
+   ÉCRANS DYNAMIQUES — RENDU
+   ========================================================= */
+
+function renderDynamic(scr){
+  if(scr.condition && !scr.condition()){
+    // écran non pertinent : on saute
+    (idx > lastDir) ? next() : prev();
+    return;
+  }
+  var renderers = {
+    text: renderTextScreen,
+    group: renderGroupScreen,
+    roles: renderRolesScreen,
+    scale: renderScaleScreen,
+    single: renderSingleScreen,
+    choice2: renderChoice2Screen,
+    protection: renderProtectionScreen,
+    final: renderFinalScreen
+  };
+  renderers[scr.type](scr);
+}
+
+var lastDir = 1; // 1 = avance, -1 = recule (pour savoir dans quel sens sauter les écrans non pertinents)
+
+function renderTextScreen(scr){
+  var html =
+    '<h2 class="step-title">'+esc(scr.title)+'</h2>' +
+    (scr.sub?'<p class="step-sub">'+esc(scr.sub)+'</p>':'') +
+    '<div class="field"><input type="text" id="fText" placeholder="'+esc(scr.placeholder||'')+'" value="'+esc(state[scr.key]||'')+'"></div>' +
+    navHtml(true, true);
+  renderCard(html, '#fText');
+  updateProgress();
+  document.getElementById('fText').oninput=function(){ state[scr.key]=this.value; };
+  bindNav(function(){ state[scr.key]=val('fText'); next(); });
+}
+
+function renderGroupScreen(scr){
+  var html = '<h2 class="step-title">'+esc(scr.title)+'</h2>';
+  scr.qs.forEach(function(item){
+    html += '<div class="field"><label>'+esc(item.q)+'</label><textarea data-key="'+item.key+'" placeholder="Écris librement…">'+esc(state.answers[item.key]||'')+'</textarea></div>';
+  });
+  html += navHtml(true, true);
+  renderCard(html, 'textarea');
+  updateProgress();
+  cardEl.querySelectorAll('textarea').forEach(function(ta){
+    ta.oninput=function(){ state.answers[ta.getAttribute('data-key')] = ta.value; };
+  });
+  bindNav(function(){ next(); });
+}
+
+function renderRolesScreen(scr){
+  var act = currentActivity();
+  var html = '<p class="eyebrow">Ton rôle</p><h2 class="step-title">Quel(s) poste(s) as-tu occupé(s) ?</h2><p class="step-sub">Tu peux en choisir plusieurs.</p>';
+  if(act.freeRole){
+    html += '<div class="field"><label>Ton rôle</label><input type="text" id="fRoleOther" placeholder="Précise ton rôle" value="'+esc(state.roleOther)+'"></div>';
+  } else {
+    html += '<div class="choices" id="roleChoices">';
+    act.roles.forEach(function(role){
+      var sel = state.roles.indexOf(role.id)!==-1;
+      html += '<div class="choice multi'+(sel?' selected':'')+'" data-key="'+role.id+'"><span class="dot"></span><span class="txt">'+esc(role.label)+'</span></div>';
+    });
+    html += '</div><div class="field inline-sub"><label>Autre (facultatif)</label><input type="text" id="fRoleOther" placeholder="Autre rôle" value="'+esc(state.roleOther)+'"></div>';
+  }
+  html += navHtml(true, canNextRoles());
+  renderCard(html);
+  updateProgress();
+  cardEl.querySelectorAll('.choice').forEach(function(el){
+    el.onclick=function(){
+      var key = el.getAttribute('data-key');
+      var i = state.roles.indexOf(key);
+      if(i===-1) state.roles.push(key); else state.roles.splice(i,1);
+      el.classList.toggle('selected');
+      refreshNextEnabled(canNextRoles());
+    };
+  });
+  var oth = document.getElementById('fRoleOther');
+  if(oth) oth.oninput=function(){ state.roleOther=oth.value; refreshNextEnabled(canNextRoles()); };
+  bindNav(function(){ if(!canNextRoles()) return shake(); next(); });
+}
+function canNextRoles(){
+  var act = currentActivity();
+  if(act.freeRole) return state.roleOther.trim().length>0;
+  return state.roles.length>0 || state.roleOther.trim().length>0;
+}
+
+function renderScaleScreen(scr){
+  var html =
+    '<h2 class="step-title">Rythme et charge</h2>' +
+    '<p class="step-sub">Sur une échelle de 1 à 5, comment as-tu trouvé le rythme / la charge de ton rôle ?</p>' +
+    '<div class="scale" id="scaleRow">' +
+      [1,2,3,4,5].map(function(n){ return '<button data-n="'+n+'" class="'+(state.scale===n?'selected':'')+'">'+n+'</button>'; }).join('') +
+    '</div>' +
+    '<div class="scale-labels"><span>Trop léger</span><span>Trop lourd</span></div>' +
+    '<div class="field"><label>Un commentaire (facultatif)</label><textarea id="fScaleComment" placeholder="Écris librement…">'+esc(state.answers.scaleComment||'')+'</textarea></div>' +
+    navHtml(true, true);
+  renderCard(html);
+  updateProgress();
+  cardEl.querySelectorAll('#scaleRow button').forEach(function(b){
+    b.onclick=function(){
+      state.scale = parseInt(b.getAttribute('data-n'),10);
+      cardEl.querySelectorAll('#scaleRow button').forEach(function(x){x.classList.remove('selected');});
+      b.classList.add('selected');
+    };
+  });
+  document.getElementById('fScaleComment').oninput=function(){ state.answers.scaleComment=this.value; };
+  bindNav(function(){ next(); });
+}
+
+function renderSingleScreen(scr){
+  var html =
+    '<h2 class="step-title">'+esc(scr.title)+'</h2>' +
+    (scr.sub?'<p class="step-sub">'+esc(scr.sub)+'</p>':'') +
+    '<div class="field"><label>'+esc(scr.q)+'</label><textarea id="fSingle" placeholder="Écris librement…">'+esc(state[scr.key]||'')+'</textarea></div>' +
+    navHtml(true, true);
+  renderCard(html, '#fSingle');
+  updateProgress();
+  document.getElementById('fSingle').oninput=function(){ state[scr.key]=this.value; };
+  bindNav(function(){ next(); });
+}
+
+function renderChoice2Screen(scr){
+  var html = '<h2 class="step-title">'+esc(scr.title)+'</h2><p class="step-sub">'+esc(scr.q)+'</p><div class="choices">';
+  scr.options.forEach(function(opt){
+    html += choiceDiv(opt, opt, state[scr.key]===opt);
+  });
+  html += '</div>' + navHtml(true, true);
+  renderCard(html);
+  updateProgress();
+  cardEl.querySelectorAll('.choice').forEach(function(el){
+    el.onclick=function(){
+      state[scr.key] = el.getAttribute('data-key');
+      cardEl.querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
+      el.classList.add('selected');
+    };
+  });
+  bindNav(function(){ next(); });
+}
+
+function renderProtectionScreen(scr){
+  var html =
+    '<div class="protection-box">' +
+    '<h2 class="step-title">Sécurité et protection</h2>' +
+    '<p class="step-sub" style="color:#e7d9d3">Si tu as été témoin ou si tu as un doute concernant la sécurité, le bien-être, ou un comportement inapproprié d\'un adulte envers un mineur — ou concernant une pression, une confusion entre autorité spirituelle et autorité personnelle, ou un abus spirituel — signale-le ici.</p>' +
+    '<span class="emergency">Ce formulaire n\'est pas un canal d\'urgence. Si la situation est grave ou immédiate, contacte directement <a href="tel:0695410778">Daniel — 06 95 41 07 78</a> ou le <a href="tel:119">119 (Allo Enfance en Danger)</a> sans attendre.</span>' +
+    '<label class="protection-toggle"><input type="checkbox" id="fReport" '+(state.reportFlag?'checked':'')+'><span>Je souhaite signaler quelque chose concernant la sécurité ou le bien-être d\'un mineur, ou un abus (y compris spirituel).</span></label>' +
+    '<div class="protection-detail" id="reportDetailWrap" style="'+(state.reportFlag?'':'display:none')+'">' +
+      '<div class="field"><label>Ton nom (obligatoire pour un signalement)</label><input type="text" id="fReportName" value="'+esc(state.name)+'" placeholder="Ton prénom et nom"></div>' +
+      '<div class="field"><label>Décris factuellement ce que tu as observé ou ce qui t\'a été rapporté, sans chercher à tout détailler — un adulte de l\'équipe de direction reprendra contact avec toi.</label><textarea id="fReportDetail">'+esc(state.reportDetail)+'</textarea></div>' +
+    '</div>' +
+    '</div>' +
+    navHtml(true, true);
+  renderCard(html);
+  updateProgress();
+  var chk = document.getElementById('fReport');
+  chk.onchange=function(){
+    state.reportFlag = chk.checked;
+    document.getElementById('reportDetailWrap').style.display = chk.checked ? '' : 'none';
+  };
+  var rn = document.getElementById('fReportName');
+  if(rn) rn.oninput=function(){ state.name = rn.value; };
+  var rd = document.getElementById('fReportDetail');
+  if(rd) rd.oninput=function(){ state.reportDetail = rd.value; };
+  bindNav(function(){
+    if(state.reportFlag && !state.name.trim()){ shake(); return; }
+    next();
+  });
+}
+
+/* =========================================================
+   ÉCRAN FINAL : compte-rendu + envoi
+   ========================================================= */
+
+function buildSummaryHTML(){
+  var act = currentActivity();
+  var html = "";
+  html += "<h3>Ton activité</h3><p>"+esc(act.label)+" — "+esc(state.edition)+"</p>";
+  if(state.presence==='ponctuel'){
+    html += "<h3>Ta venue</h3><p>"+esc(state.ponctuelContext)+"</p>";
+    act.genericLight.forEach(function(q,i){
+      var a = state.answers['gl_'+i];
+      if(a) html += qa(q,a);
+    });
+  } else {
+    var roleLabels = act.freeRole ? [state.roleOther] : state.roles.map(function(id){
+      var role = act.roles.filter(function(rr){return rr.id===id;})[0];
+      return role ? role.label : id;
+    });
+    if(state.roleOther && !act.freeRole) roleLabels.push(state.roleOther);
+    html += "<h3>Ton ou tes rôles</h3><p>"+esc(roleLabels.join(', '))+"</p>";
+    act.generic.forEach(function(g,gi){
+      var block = "";
+      g.qs.forEach(function(q,i){
+        var a = state.answers['g_'+gi+'_'+i];
+        if(a) block += qa(q,a);
+      });
+      if(block) html += "<h3>"+esc(g.title)+"</h3>"+block;
+    });
+    if(state.scale){
+      html += "<h3>Rythme et charge</h3><p>"+state.scale+" / 5"+(state.answers.scaleComment ? " — "+esc(state.answers.scaleComment) : "")+"</p>";
+    }
+    Object.keys(act.modules||{}).forEach(function(roleId){
+      if(state.roles.indexOf(roleId)===-1) return;
+      var mod = act.modules[roleId];
+      var block = "";
+      mod.qs.forEach(function(q,i){
+        var a = state.answers['m_'+roleId+'_'+i];
+        if(a) block += qa(q,a);
+      });
+      if(block) html += "<h3>"+esc(mod.label)+"</h3>"+block;
+    });
+  }
+  if(state.security) html += "<h3>Point de vigilance</h3>"+qa("As-tu un point de vigilance à signaler ?", state.security);
+  if(state.communication) html += "<h3>Communication</h3>"+qa("Clarté et coordination", state.communication);
+  if(state.charism) html += "<h3>Vie spirituelle en équipe</h3>"+qa("Vécu de la louange, des paroles, de la prière", state.charism);
+  if(act.extra && state.extraTransversal) html += "<h3>"+esc(act.extra.label)+"</h3>"+qa(act.extra.q, state.extraTransversal);
+  if(state.remarks) html += "<h3>Autres remarques</h3><p>"+esc(state.remarks)+"</p>";
+  if(state.reprendreRole) html += "<h3>L'année prochaine</h3><p>"+esc(state.reprendreRole)+"</p>";
+  if(state.reportFlag){
+    html += "<h3>Signalement</h3><p>Ton signalement a bien été noté séparément et transmis à l'équipe de direction pour suivi.</p>";
+  }
+  return html;
+}
+function qa(q,a){ return '<div class="qa"><div class="q">'+esc(q)+'</div><p>'+esc(a).replace(/\n/g,'<br>')+'</p></div>'; }
+
+function buildPlainMessage(){
+  var act = currentActivity();
+  var lines = [];
+  lines.push("RELECTURE PAJE");
+  lines.push("Activité : " + act.label);
+  lines.push("Édition/année : " + state.edition);
+  lines.push("Anonyme : " + (state.anonymous ? "oui" : "non"));
+  lines.push("Nom : " + (state.anonymous ? "(anonyme)" : state.name));
+  lines.push("Présence : " + (state.presence==='complet' ? "présent(e) toute la durée" : "venue ponctuelle"));
+  if(state.presence==='ponctuel') lines.push("Cadre de la venue : " + state.ponctuelContext);
+  else {
+    var roleLabels = act.freeRole ? [state.roleOther] : state.roles.map(function(id){
+      var role = act.roles.filter(function(rr){return rr.id===id;})[0];
+      return role ? role.label : id;
+    });
+    if(state.roleOther && !act.freeRole) roleLabels.push(state.roleOther);
+    lines.push("Poste(s) : " + roleLabels.join(', '));
+  }
+  lines.push("");
+  lines.push("--- Réponses ---");
+  Object.keys(state.answers).forEach(function(k){
+    if(state.answers[k]) lines.push(k + " : " + state.answers[k]);
+  });
+  if(state.scale) lines.push("Rythme/charge : " + state.scale + "/5");
+  lines.push("Sécurité (point de vigilance) : " + (state.security||"—"));
+  lines.push("Communication : " + (state.communication||"—"));
+  if(state.charism) lines.push("Vie spirituelle en équipe : " + state.charism);
+  if(currentActivity().extra) lines.push(currentActivity().extra.label + " : " + (state.extraTransversal||"—"));
+  lines.push("Autres remarques : " + (state.remarks||"—"));
+  if(state.reprendreRole) lines.push("Reprendre le rôle l'an prochain : " + state.reprendreRole);
+  lines.push("");
+  lines.push(state.reportFlag ? "⚠ Un signalement séparé a été transmis pour cette personne." : "Aucun signalement.");
+  return lines.join("\n");
+}
+
+function submitToSplitforms(fields){
+  var fd = new FormData();
+  fd.append('access_key', SPLITFORMS_KEY);
+  fd.append('name', fields.name);
+  fd.append('email', fields.email);
+  fd.append('message', fields.message);
+  fd.append('botcheck', '');
+  return fetch(SPLITFORMS_URL, { method:'POST', body: fd });
+}
+
+function renderFinalScreen(){
+  var html =
+    '<div class="thanks-icon">✦</div>' +
+    '<h2 class="step-title">Voici le reflet de ce que tu as partagé</h2>' +
+    '<p class="step-sub">Relis si tu veux, puis envoie ta relecture. Merci pour ce temps donné.</p>' +
+    '<div class="final-summary" id="summaryBox">'+buildSummaryHTML()+'</div>' +
+    '<div class="nav" style="margin-top:24px">' +
+      '<button class="btn btn-ghost" id="btnBack">Précédent</button>' +
+      '<button class="btn btn-primary" id="btnSend" style="flex:1">Envoyer ma relecture</button>' +
+    '</div>' +
+    '<p class="footer-note" id="sendStatus"></p>';
+  renderCard(html);
+  updateProgress();
+  document.getElementById('btnBack').onclick=prev;
+  document.getElementById('btnSend').onclick=function(){
+    var btn = document.getElementById('btnSend');
+    var status = document.getElementById('sendStatus');
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    var act = currentActivity();
+    var mainMessage = buildPlainMessage();
+
+    var jobs = [];
+    jobs.push(submitToSplitforms({
+      name: state.anonymous ? "Anonyme" : state.name,
+      email: state.email || "non-communique@paje-belley-ars.fr",
+      message: mainMessage
+    }));
+
+    if(state.reportFlag){
+      var reportMsg = "⚠️ SIGNALEMENT SÉCURITÉ / PROTECTION — À TRAITER EN PRIORITÉ\n\n" +
+        "Activité : " + act.label + " (" + state.edition + ")\n" +
+        "Nom (obligatoire) : " + state.name + "\n" +
+        "Email : " + (state.email||"—") + "\n\n" +
+        "Description :\n" + state.reportDetail;
+      jobs.push(submitToSplitforms({
+        name: "SIGNALEMENT — " + state.name,
+        email: state.email || "non-communique@paje-belley-ars.fr",
+        message: reportMsg
+      }));
+    }
+
+    Promise.all(jobs).then(function(responses){
+      var allOk = responses.every(function(r){ return r.ok; });
+      if(allOk){
+        clearProgress();
+        submitted = true;
+        renderThanks();
+      } else {
+        status.textContent = "L'envoi a rencontré un problème. Tes réponses restent enregistrées sur cet appareil — réessaie dans un instant.";
+        btn.disabled = false; btn.textContent = "Envoyer ma relecture";
+      }
+    }).catch(function(){
+      status.textContent = "Impossible d'envoyer pour le moment (connexion ?). Tes réponses restent enregistrées sur cet appareil — réessaie dans un instant.";
+      btn.disabled = false; btn.textContent = "Envoyer ma relecture";
+    });
+  };
+}
+
+function renderThanks(){
+  var html =
+    '<div class="thanks-icon">✓</div>' +
+    '<h2 class="step-title">C\'est envoyé. Merci.</h2>' +
+    '<p class="step-sub">Ta relecture a bien été transmise à l\'équipe de la PaJe.'+
+    (state.reportFlag ? ' Ton signalement a été transmis séparément — une personne de l\'équipe de direction reprendra contact avec toi.' : '') +
+    '</p>' +
+    '<div class="nav"><button class="btn btn-ghost" id="btnAgain" style="width:100%">Faire une autre relecture</button></div>';
+  renderCard(html);
+  progressFill.style.width = "100%";
+  phaseLabel.textContent = "Terminé";
+  document.getElementById('btnAgain').onclick=function(){
+    state = freshState(); idx = 0; screens=[]; submitted=false; render();
+  };
+}
+
+/* =========================================================
+   NAVIGATION HELPERS
+   ========================================================= */
+
+function navHtml(showBack, nextEnabled){
+  return '<div class="nav">' +
+    (showBack && idx>0 ? '<button class="btn btn-ghost" id="btnBack">Précédent</button>' : '') +
+    '<button class="btn btn-primary" id="btnNext" '+(nextEnabled?'':'disabled')+' style="flex:1">Suivant</button>' +
+    '</div>' +
+    '<button class="btn btn-text" id="btnPause" style="width:100%;text-align:center;margin-top:4px">Reprendre plus tard</button>';
+}
+function bindNav(onNext){
+  var b = document.getElementById('btnNext');
+  if(b) b.onclick = onNext;
+  var back = document.getElementById('btnBack');
+  if(back) back.onclick = function(){ lastDir=-1; prev(); };
+  var pause = document.getElementById('btnPause');
+  if(pause) pause.onclick = function(){
+    saveProgress();
+    var status = document.createElement('div');
+    status.className = 'footer-note';
+    status.textContent = "C'est noté — tu retrouveras ta relecture en cours en revenant sur ce lien.";
+    cardEl.appendChild(status);
+    pause.disabled = true;
+  };
+}
+function refreshNextEnabled(enabled){
+  var b = document.getElementById('btnNext');
+  if(b) b.disabled = !enabled;
+}
+function val(id){ var e=document.getElementById(id); return e?e.value:""; }
+function shake(){
+  cardEl.style.transform="translateX(-4px)";
+  setTimeout(function(){cardEl.style.transform="translateX(4px)";},70);
+  setTimeout(function(){cardEl.style.transform="translateY(0)";},140);
+}
+
+/* =========================================================
+   MOTEUR PRINCIPAL
+   ========================================================= */
+
+function render(){
+  var id = currentId();
+  if(!id){ // fin de tout
+    return;
+  }
+  if(FIXED_IDS.indexOf(id) !== -1){
+    switch(id){
+      case "intro": return renderIntro();
+      case "ident": return renderIdent();
+      case "activity": return renderActivityStep();
+      case "edition": return renderEditionStep();
+      case "presence": return renderPresenceStep();
+    }
+  } else {
+    var scr = screens[idx-FIXED_IDS.length];
+    if(!scr){ return; }
+    renderDynamic(scr);
+  }
+}
+
+// point d'entrée
+idx = 0;
+render();
+
+})();
+</script>
+</body>
+</html>
