@@ -649,15 +649,20 @@ function currentId(){
 }
 
 function renderCard(html, focusSelector){
-  cardEl.classList.remove('in'); cardEl.classList.add('out');
-  setTimeout(function(){
-    cardEl.innerHTML = html;
-    cardEl.classList.remove('out'); cardEl.classList.add('in');
-    if(focusSelector){
-      var el = cardEl.querySelector(focusSelector);
-      if(el) setTimeout(function(){ el.focus(); }, 60);
-    }
-  }, 180);
+  // Le contenu est posé immédiatement (les écouteurs d'événements sont attachés
+  // juste après l'appel à renderCard dans chaque écran) ; seule l'entrée est animée.
+  cardEl.classList.remove('in');
+  cardEl.classList.add('out');
+  cardEl.innerHTML = html;
+  void cardEl.offsetWidth; // force le navigateur à relire l'état avant de rebasculer la classe
+  requestAnimationFrame(function(){
+    cardEl.classList.remove('out');
+    cardEl.classList.add('in');
+  });
+  if(focusSelector){
+    var el = cardEl.querySelector(focusSelector);
+    if(el) setTimeout(function(){ el.focus(); }, 60);
+  }
 }
 
 function saveProgress(){
@@ -682,19 +687,12 @@ function goTo(newIdx){
   render();
 }
 function next(){
-  // recalcul des écrans dynamiques juste après l'étape "présence" (et après "postes" si complet, pour tenir compte des postes cochés)
-  if(currentId()==="presence"){ screens = buildDynamicScreens(); }
-  if(currentId()==="postes"){ screens = buildDynamicScreens.call(null); rebuildAfterPostes(); }
+  lastDir = 1;
+  // recalcul des écrans dynamiques juste après l'étape "présence" (postes connus ensuite) et après "postes" (une fois les postes cochés)
+  if(currentId()==="presence" || currentId()==="postes"){ screens = buildDynamicScreens(); }
   goTo(idx+1);
 }
-function prev(){ if(idx>0) goTo(idx-1); }
-
-function rebuildAfterPostes(){
-  // reconstruit les écrans dynamiques en conservant l'ordre, maintenant que les postes sont connus
-  var act = currentActivity();
-  var d = buildDynamicScreens();
-  screens = d;
-}
+function prev(){ lastDir = -1; if(idx>0) goTo(idx-1); }
 
 /* petit utilitaire d'échappement */
 function esc(s){
@@ -853,8 +851,8 @@ function choiceDiv(key,label,selected){
 
 function renderDynamic(scr){
   if(scr.condition && !scr.condition()){
-    // écran non pertinent : on saute
-    (idx > lastDir) ? next() : prev();
+    // écran non pertinent : on saute dans le même sens que la navigation en cours
+    if(lastDir===-1) prev(); else next();
     return;
   }
   var renderers = {
