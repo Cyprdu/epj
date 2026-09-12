@@ -767,6 +767,8 @@ function renderIdent(){
     navHtml(true, !!state.name.trim());
   renderCard(html, '#fName');
   updateProgress();
+  var fNameEl = document.getElementById('fName');
+  fNameEl.oninput = function(){ refreshNextEnabled(!!fNameEl.value.trim()); };
   bindNav(function(){
     state.name = val('fName'); state.email = val('fEmail'); state.anonymous = document.getElementById('fAnon').checked;
     if(!state.name.trim()){ shake(); return; }
