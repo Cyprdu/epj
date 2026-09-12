@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Relecture PaJe — Belley-Ars</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -759,8 +760,8 @@ function renderIdent(){
   var html =
     '<p class="eyebrow">Étape 1</p>' +
     '<h2 class="step-title">Qui es-tu ?</h2>' +
-    '<div class="field"><label>Ton prénom (ou nom)</label>' +
-      '<input type="text" id="fName" placeholder="Ton prénom" value="'+esc(state.name)+'"></div>' +
+    '<div class="field"><label>Nom & Prénom</label>' +
+      '<input type="text" id="fName" placeholder="Nom + Prénom" value="'+esc(state.name)+'"></div>' +
     '<div class="field"><label>Ton e-mail (facultatif)</label>' +
       '<input type="email" id="fEmail" placeholder="ton@email.fr" value="'+esc(state.email)+'"></div>' +
     '<label class="checkline"><input type="checkbox" id="fAnon" '+(state.anonymous?'checked':'')+'> Je préfère rester anonyme pour la synthèse transversale</label>' +
